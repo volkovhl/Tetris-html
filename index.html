@@ -766,6 +766,9 @@
             }
 
             function setupKeyboardControls() {
+                // Флаг для защиты от множественных вызовов hardDrop
+                let spacePressed = false;
+
                 window.addEventListener('keydown', (e) => {
                     // Игнорируем, если игра неактивна или нажат модификатор
                     if (gameOver || !currentPiece || e.altKey || e.ctrlKey || e.metaKey) return;
@@ -777,16 +780,19 @@
                         e.preventDefault();
                     }
 
-                    const now = Date.now();
-
-                    // Обработка одиночных нажатий
-                    if (key === 'ArrowUp') {
-                        rotatePiece();
+                    // Обработка пробела с защитой от повторных вызовов
+                    if (key === ' ' || key === 'Space') {
+                        if (!spacePressed) {
+                            spacePressed = true;
+                            hardDrop();
+                        }
                         return;
                     }
 
-                    if (key === ' ' || key === 'Space') {
-                        hardDrop();
+                    const now = Date.now();
+
+                    if (key === 'ArrowUp') {
+                        rotatePiece();
                         return;
                     }
 
@@ -808,6 +814,13 @@
 
                 window.addEventListener('keyup', (e) => {
                     const key = e.key;
+
+                    // Сбрасываем флаг пробела при отпускании
+                    if (key === ' ' || key === 'Space') {
+                        spacePressed = false;
+                        e.preventDefault();
+                        return;
+                    }
 
                     if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'ArrowDown') {
                         keyState[key] = false;
@@ -835,6 +848,7 @@
                 // Очищаем состояние клавиш при потере фокуса
                 window.addEventListener('blur', () => {
                     keyState = {};
+                    spacePressed = false;
                     clearAllIntervals();
                 });
 
@@ -842,6 +856,7 @@
                 window.addEventListener('visibilitychange', () => {
                     if (document.hidden) {
                         keyState = {};
+                        spacePressed = false;
                         clearAllIntervals();
                     }
                 });
