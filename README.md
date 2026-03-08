@@ -1,5 +1,5 @@
 # 🧩[TETRIS HTML](https://volkovhl.github.io/Tetris-html/)  <img width="64" height="24" alt="image" src="https://github.com/user-attachments/assets/8537fe87-4041-4f37-b2f6-2939a303495f" />
- Смотреть 
+  
 
 Классический Тетрис с уникальным управлением и динамической скоростью. Оптимизирован для мобильных устройств и ПК.
 
