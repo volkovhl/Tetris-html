@@ -9,7 +9,7 @@
     <!-- Основные SEO мета-теги -->
     <title>ТЕТРИС html — классическая игра с увеличенным полем | Tetris онлайн</title>
     <meta name="description"
-        content="Тетрис html с уникальным полем 20x40. Динамическая скорость, удобное управление для ПК и смартфонов. Регулировка скорости от 0.5x до 3.0x. Бесплатно, без регистрации.">
+        content="Тетрис html с уникальным полем 20x40. Динамическая скорость, удобное управление для ПК и смартфонов. Регулировка скорости от 0.5x до 10.0x. Бесплатно, без регистрации.">
     <meta name="keywords"
         content="тетрис, tetris, игра тетрис, тетрис онлайн, классический тетрис, тетрис на русском, тетрис 20х40, тетрис большая доска, тетрис смартфон, тетрис пк">
     <meta name="author" content="volkovhl">
@@ -33,13 +33,14 @@
     <meta name="apple-mobile-web-app-title" content="ТЕТРИС HTML">
     <meta name="format-detection" content="telephone=no">
 
-    <!-- Favicon (можно добавить позже) -->
-    <link rel="icon" type="image/png"
-        href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%231a1f2f'/><rect x='10' y='10' width='35' height='35' fill='%233cc7d6'/><rect x='55' y='10' width='35' height='35' fill='%23f7d84a'/><rect x='10' y='55' width='35' height='35' fill='%23b484e0'/><rect x='55' y='55' width='35' height='35' fill='%237ec850'/></svg>">
+    <!-- Favicon с красным логотипом -->
+    <link rel="icon" type="image/svg+xml"
+        href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='1200' height='1172' viewBox='0 0 1200 1172'%3E%3Cg transform='translate(0,1172) scale(0.1,-0.1)' fill='%23FF0000'%3E%3Cpath d='M5105 11713 c-722 -29 -1476 -152 -2180 -354 -246 -72 -703 -227 -670 -228 6 -1 55 6 109 14 277 42 703 86 1076 111 303 21 1037 24 1315 6 1415 -94 2552 -440 3506 -1067 469 -309 908 -716 1242 -1150 926 -1206 1255 -2794 886 -4283 -103 -416 -275 -845 -484 -1207 -68 -118 -254 -395 -265 -395 -4 0 -182 183 -396 407 -1927 2023 -3438 3546 -4089 4121 l-59 52 279 283 c154 155 503 506 775 779 l495 498 -40 38 c-22 22 -119 112 -215 202 -96 90 -193 181 -215 202 l-40 37 -1002 71 c-551 38 -1009 70 -1017 70 -14 0 -2894 -2682 -2912 -2711 -4 -7 57 -74 162 -178 93 -91 458 -453 810 -803 353 -351 647 -638 653 -638 6 0 322 290 703 645 380 355 694 644 697 643 18 -8 4342 -4528 4415 -4615 l24 -29 -111 -66 c-466 -277 -981 -447 -1552 -510 -183 -20 -760 -17 -945 5 -904 108 -1807 429 -2768 984 -92 53 -383 231 -391 239 -2 2 31 54 73 116 l76 113 -207 202 c-115 112 -228 221 -254 242 l-45 40 -108 -65 -107 -65 -87 78 c-48 42 -133 123 -190 179 l-102 101 -290 -240 c-160 -132 -290 -243 -290 -248 0 -11 84 -107 229 -264 61 -66 110 -123 109 -126 -2 -3 -118 -104 -258 -224 -705 -604 -1197 -1065 -1308 -1228 -62 -90 -104 -178 -126 -264 -24 -90 -21 -269 4 -363 82 -299 353 -566 651 -642 66 -16 103 -19 193 -16 187 7 278 52 450 223 158 157 348 412 732 982 103 153 252 374 332 491 l144 213 166 -163 c984 -963 2123 -1492 3487 -1620 221 -21 892 -17 1075 5 815 101 1555 364 2231 794 68 44 129 82 136 86 10 6 212 -204 978 -1017 150 -160 184 -183 278 -193 163 -16 413 105 602 292 224 219 315 457 236 612 -22 45 -156 192 -728 806 l-362 389 63 72 c81 93 234 286 317 401 578 796 872 1567 965 2530 22 233 22 698 0 945 -124 1368 -692 2616 -1667 3667 -636 684 -1377 1188 -2249 1528 -863 336 -1914 500 -2945 458z'/%3E%3C/g%3E%3C/svg%3E">
 
-    <!-- Каноническая ссылка (если будет несколько копий) -->
+    <!-- Каноническая ссылка -->
     <link rel="canonical" href="https://volkovhl.github.io/Tetris-html">
     <style>
+        /* ========== СБРОС СТИЛЕЙ И ОСНОВНЫЕ НАСТРОЙКИ ========== */
         * {
             box-sizing: border-box;
             user-select: none;
@@ -62,6 +63,7 @@
             padding: 0;
         }
 
+        /* ========== ОСНОВНОЙ КОНТЕЙНЕР ИГРЫ ========== */
         .game-wrapper {
             display: flex;
             flex-direction: column;
@@ -71,17 +73,19 @@
             height: 100vh;
             max-width: 800px;
             background: #1a1f2f;
-            padding: 8px 8px env(safe-area-inset-bottom) 8px;
+            padding: 4px 4px 0 4px;
             box-shadow: 0 20px 30px rgba(0, 0, 0, 0.6);
+            position: relative;
         }
 
+        /* ========== ВЕРХНЯЯ ПАНЕЛЬ ========== */
         .header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-            margin-bottom: 6px;
-            padding: 0 5px;
+            margin-bottom: 4px;
+            padding: 0 2px;
             color: #a9b7d4;
             font-weight: 600;
             letter-spacing: 0.5px;
@@ -90,38 +94,39 @@
 
         .score-box {
             background: #0e121f;
-            padding: 6px 18px;
-            border-radius: 40px;
-            font-size: 1.3rem;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 1.1rem;
             color: #ffe484;
             box-shadow: inset 0 3px 6px #00000055;
         }
 
+        /* ========== УПРАВЛЕНИЕ СКОРОСТЬЮ ========== */
         .speed-control {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 4px;
             background: #0e121f;
-            padding: 4px 12px;
-            border-radius: 40px;
+            padding: 2px 8px;
+            border-radius: 30px;
             box-shadow: inset 0 3px 6px #00000055;
         }
 
         .speed-label {
             display: flex;
             align-items: center;
-            gap: 4px;
+            gap: 2px;
             color: #7b88aa;
-            font-size: 0.8rem;
+            font-size: 0.7rem;
         }
 
         .speed-btn {
             background: #323d5e;
             border: none;
             color: white;
-            font-size: 1.2rem;
-            width: 32px;
-            height: 32px;
+            font-size: 1rem;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -139,28 +144,108 @@
 
         .speed-value {
             color: #ffe484;
-            font-size: 1rem;
+            font-size: 0.9rem;
             min-width: 45px;
             text-align: center;
         }
 
+        :root {
+            --yt-size: 22px;
+            /* основной размер кнопки (ширина/высота) */
+            --yt-logo-size: 25px;
+            /* размер красного логотипа */
+            --yt-icon-size: 10px;
+            /* размер иконки Play (▶) */
+            --yt-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+            /* тень */
+            --yt-shadow-hover: 0 8px 20px rgba(255, 0, 0, 0.4);
+            /* тень при наведении */
+        }
+
+        .youtube-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: var(--yt-size);
+            height: var(--yt-size);
+            background: linear-gradient(135deg, #ff0000, #cc0000);
+            color: white;
+            text-decoration: none;
+            border-radius: 50%;
+            box-shadow: var(--yt-shadow);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .youtube-button:hover {
+            transform: translateY(-3px) scale(1.1);
+            box-shadow: var(--yt-shadow-hover);
+        }
+
+        .youtube-button:active {
+            transform: translateY(0) scale(1);
+        }
+
+        .youtube-icon {
+            font-size: var(--yt-icon-size);
+            line-height: 1;
+            position: relative;
+            z-index: 2;
+        }
+
+        .youtube-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: var(--yt-logo-size);
+            height: var(--yt-logo-size);
+            background-image: url('data:image/svg+xml,%3Csvg xmlns=\'http://www.w3.org/2000/svg\' width=\'20\' height=\'20\' viewBox=\'0 0 1200 1172\'%3E%3Cg transform=\'translate(0,1172) scale(0.016667,-0.016667)\' fill=\'%23FFFFFF\'%3E%3Cpath d=\'M5105 11713 c-722 -29 -1476 -152 -2180 -354 -246 -72 -703 -227 -670 -228 6 -1 55 6 109 14 277 42 703 86 1076 111 303 21 1037 24 1315 6 1415 -94 2552 -440 3506 -1067 469 -309 908 -716 1242 -1150 926 -1206 1255 -2794 886 -4283 -103 -416 -275 -845 -484 -1207 -68 -118 -254 -395 -265 -395 -4 0 -182 183 -396 407 -1927 2023 -3438 3546 -4089 4121 l-59 52 279 283 c154 155 503 506 775 779 l495 498 -40 38 c-22 22 -119 112 -215 202 -96 90 -193 181 -215 202 l-40 37 -1002 71 c-551 38 -1009 70 -1017 70 -14 0 -2894 -2682 -2912 -2711 -4 -7 57 -74 162 -178 93 -91 458 -453 810 -803 353 -351 647 -638 653 -638 6 0 322 290 703 645 380 355 694 644 697 643 18 -8 4342 -4528 4415 -4615 l24 -29 -111 -66 c-466 -277 -981 -447 -1552 -510 -183 -20 -760 -17 -945 5 -904 108 -1807 429 -2768 984 -92 53 -383 231 -391 239 -2 2 31 54 73 116 l76 113 -207 202 c-115 112 -228 221 -254 242 l-45 40 -108 -65 -107 -65 -87 78 c-48 42 -133 123 -190 179 l-102 101 -290 -240 c-160 -132 -290 -243 -290 -248 0 -11 84 -107 229 -264 61 -66 110 -123 109 -126 -2 -3 -118 -104 -258 -224 -705 -604 -1197 -1065 -1308 -1228 -62 -90 -104 -178 -126 -264 -24 -90 -21 -269 4 -363 82 -299 353 -566 651 -642 66 -16 103 -19 193 -16 187 7 278 52 450 223 158 157 348 412 732 982 103 153 252 374 332 491 l144 213 166 -163 c984 -963 2123 -1492 3487 -1620 221 -21 892 -17 1075 5 815 101 1555 364 2231 794 68 44 129 82 136 86 10 6 212 -204 978 -1017 150 -160 184 -183 278 -193 163 -16 413 105 602 292 224 219 315 457 236 612 -22 45 -156 192 -728 806 l-362 389 63 72 c81 93 234 286 317 401 578 796 872 1567 965 2530 22 233 22 698 0 945 -124 1368 -692 2616 -1667 3667 -636 684 -1377 1188 -2249 1528 -863 336 -1914 500 -2945 458z\'/%3E%3C/g%3E%3C/svg%3E');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            opacity: 0.9;
+            z-index: 1;
+        }
+
+        /* Адаптация для разных экранов */
+        @media (max-height: 700px) {
+            :root {
+                --yt-size: 36px;
+                --yt-logo-size: 18px;
+                --yt-icon-size: 18px;
+            }
+        }
+
+        @media (max-width: 600px) {
+            :root {
+                --yt-size: 34px;
+                --yt-logo-size: 16px;
+                --yt-icon-size: 16px;
+            }
+        }
+
+        /* ========== ПРЕДПРОСМОТР СЛЕДУЮЩЕЙ ФИГУРЫ ========== */
         .next-label {
             display: flex;
             align-items: center;
-            gap: 5px;
+            gap: 3px;
             background: #0e121f;
-            padding: 5px 12px;
-            border-radius: 40px;
+            padding: 3px 8px;
+            border-radius: 30px;
         }
 
         .next-canvas {
             background: #0e121f;
-            border-radius: 12px;
-            width: 70px;
-            height: 70px;
+            border-radius: 8px;
+            width: 50px;
+            height: 50px;
             box-shadow: inset 0 3px 6px #00000055;
         }
 
+        /* ========== КОНТЕЙНЕР ИГРОВОГО ПОЛЯ ========== */
         .canvas-container {
             flex: 1;
             width: 100%;
@@ -168,6 +253,7 @@
             align-items: center;
             justify-content: center;
             min-height: 0;
+            margin-bottom: 2px;
         }
 
         canvas#board {
@@ -177,24 +263,25 @@
             max-width: 100%;
             aspect-ratio: 1 / 2;
             background: #0a0d16;
-            border-radius: 20px;
-            box-shadow: 0 0 0 3px #303754, inset 0 0 0 2px #5f6f9e;
+            border-radius: 16px;
+            box-shadow: 0 0 0 2px #303754, inset 0 0 0 1px #5f6f9e;
             image-rendering: crisp-edges;
             touch-action: none;
         }
 
+        /* ========== ПОДСКАЗКИ ПО УПРАВЛЕНИЮ ========== */
         .gesture-hint {
             display: flex;
             justify-content: space-around;
             width: 100%;
-            margin-top: 4px;
-            margin-bottom: 4px;
+            margin-top: 2px;
+            margin-bottom: 2px;
             color: #7b88aa;
-            font-size: 0.7rem;
+            font-size: 0.6rem;
             font-weight: 500;
             background: #252c41;
-            padding: 6px 0;
-            border-radius: 30px;
+            padding: 4px 0;
+            border-radius: 20px;
             border: 1px solid #3e4a6b;
             flex-shrink: 0;
         }
@@ -203,55 +290,125 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 2px;
+            gap: 1px;
         }
 
         .gesture-hint i {
-            font-size: 1rem;
+            font-size: 0.9rem;
             filter: drop-shadow(0 2px 2px black);
         }
 
+        /* ========== НИЖНЯЯ ПАНЕЛЬ КНОПОК ========== */
         .footer {
-            margin-top: 4px;
-            margin-bottom: 6px;
+            margin-top: 2px;
+            margin-bottom: 0;
             display: flex;
-            gap: 15px;
+            gap: 8px;
             flex-shrink: 0;
+            width: 100%;
+            justify-content: center;
+            padding-bottom: env(safe-area-inset-bottom, 8px);
+            background: #1a1f2f;
+            flex-wrap: wrap;
         }
 
-        .reset-btn {
+        .reset-btn,
+        .ai-btn {
             background: #323d5e;
             border: none;
             color: white;
             font-size: 0.9rem;
-            padding: 6px 24px;
-            border-radius: 50px;
+            padding: 8px 16px;
+            border-radius: 40px;
             font-weight: 600;
             box-shadow: 0 4px 0 #1b2135;
             transition: 0.08s linear;
             touch-action: manipulation;
             cursor: pointer;
+            min-width: 120px;
         }
 
-        .reset-btn:active {
+        .ai-btn {
+            background: #4a3d7a;
+            box-shadow: 0 4px 0 #2a1f4a;
+        }
+
+        .reset-btn:active,
+        .ai-btn:active {
             transform: translateY(4px);
             box-shadow: none;
         }
 
         .keyboard-hint {
-            display: inline-block;
-            background: #0e121f;
-            padding: 2px 8px;
-            border-radius: 8px;
-            margin-left: 10px;
-            font-size: 0.7rem;
-            color: #7b88aa;
+            display: none;
+        }
+
+        /* ========== АДАПТИВ ДЛЯ ПЛАНШЕТОВ ========== */
+        @media (min-width: 768px) {
+            .keyboard-hint {
+                display: inline-block;
+                background: #0e121f;
+                padding: 2px 8px;
+                border-radius: 8px;
+                margin-left: 10px;
+                font-size: 0.7rem;
+                color: #7b88aa;
+            }
+
+            .footer {
+                justify-content: space-between;
+                padding: 0 10px 8px 10px;
+            }
+        }
+
+        /* ========== АДАПТИВ ДЛЯ НИЗКИХ ЭКРАНОВ ========== */
+        @media (max-height: 700px) {
+            .gesture-hint {
+                font-size: 0.5rem;
+            }
+
+            .gesture-hint i {
+                font-size: 0.7rem;
+            }
+
+            .next-canvas {
+                width: 40px;
+                height: 40px;
+            }
+
+            .reset-btn,
+            .ai-btn {
+                padding: 6px 12px;
+                font-size: 0.8rem;
+                min-width: 100px;
+            }
+
+            .youtube-button {
+                padding: 6px 10px;
+            }
+
+            .red-logo-small {
+                width: 18px;
+                height: 18px;
+            }
+        }
+
+        /* На маленьких экранах кнопка становится компактнее */
+        @media (max-width: 600px) {
+            .youtube-button {
+                padding: 6px 8px;
+            }
+
+            .youtube-icon {
+                font-size: 18px;
+            }
         }
     </style>
 </head>
 
 <body>
     <div class="game-wrapper">
+        <!-- Верхняя панель: счет, скорость, YouTube, предпросмотр -->
         <div class="header">
             <div class="score-box" id="scoreDisplay">0</div>
 
@@ -262,116 +419,188 @@
                 <button class="speed-btn" id="speedUp">+</button>
             </div>
 
+            <div id="youtubeButtonContainer">
+                <a href="https://www.youtube.com/@Pavel_Volkov?sub_confirmation=1" target="_blank"
+                    rel="noopener noreferrer" class="youtube-button" id="youtubeChannelBtn"
+                    title="YouTube канал Павла Волкова">
+                    <span class="youtube-icon">▶</span>
+                </a>
+            </div>
+
             <div class="next-label">
-                <span style="color:#a9b7d4;">⬇️</span>
+                <span style="color:#a9b7d4; font-size: 0.8rem;">⬇️</span>
                 <canvas id="nextCanvas" class="next-canvas" width="140" height="140"></canvas>
             </div>
         </div>
 
+        <!-- Игровое поле -->
         <div class="canvas-container">
             <canvas id="board" width="800" height="1600"></canvas>
         </div>
 
+        <!-- Подсказки для мобильного управления -->
         <div class="gesture-hint">
-            <span><i>⬅️➡️</i> тащи / ←→</span>
-            <span><i>⬆️</i> тяни / ↑</span>
-            <span><i>⬇️⬇️</i> резко вниз / ↓</span>
-            <span><i>👆</i> тап / пробел</span>
+            <span><i>⬅️➡️</i> тащи</span>
+            <span><i>⬆️</i> тяни</span>
+            <span><i>⬇️⬇️</i> резко</span>
+            <span><i>👆</i> тап</span>
         </div>
 
+        <!-- Нижние кнопки управления -->
         <div class="footer">
-            <button class="reset-btn" id="resetGame">⟲ Новая игра</button>
-            <span class="keyboard-hint">⌨️ стрелки + пробел</span>
+            <button class="reset-btn" id="resetGame">▶ Новая игра</button>
+            <button class="ai-btn" id="aiPlay">🤖 Batrak</button>
         </div>
     </div>
 
     <script>
         (function () {
-            // --------------------------------------------------------------
-            // ТЕТРИС 20x40 · динамическая чувствительность + скорость клавиатуры
-            // --------------------------------------------------------------
+            (function protectYouTubeLinks() {
+                const YT_CONFIG = {
+                    channel: {
+                        full: 'aHR0cHM6Ly93d3cueW91dHViZS5jb20vQFBhdmVsX1ZvbGtvdj9zdWJfY29uZmlybWF0aW9uPTE='
+                    },
+                    checkInterval: 1000
+                };
 
+                let protectionActive = true;
+
+                function getYouTubeChannelUrl() {
+                    return atob(YT_CONFIG.channel.full);
+                }
+
+                function restoreYouTubeLink() {
+                    const container = document.getElementById('youtubeButtonContainer');
+
+                    if (container) {
+                        const channelBtn = document.getElementById('youtubeChannelBtn');
+                        if (!channelBtn || !channelBtn.parentElement || channelBtn.parentElement.tagName !== 'A' || channelBtn.href !== getYouTubeChannelUrl()) {
+                            container.innerHTML = '';
+                            const newChannelBtn = document.createElement('a');
+                            newChannelBtn.href = getYouTubeChannelUrl();
+                            newChannelBtn.target = '_blank';
+                            newChannelBtn.rel = 'noopener noreferrer';
+                            newChannelBtn.className = 'youtube-button';
+                            newChannelBtn.id = 'youtubeChannelBtn';
+                            newChannelBtn.title = 'YouTube канал Павла Волкова';
+                            newChannelBtn.innerHTML = `
+                                <span class="red-logo-small"></span>
+                                <span class="youtube-icon">▶</span>
+                            `;
+                            container.appendChild(newChannelBtn);
+                        }
+                    }
+                }
+
+                function startProtection() {
+                    setTimeout(restoreYouTubeLink, 100);
+
+                    setInterval(function () {
+                        if (!protectionActive) return;
+                        restoreYouTubeLink();
+                    }, YT_CONFIG.checkInterval);
+
+                    // Перехватываем getElementById для дополнительной защиты
+                    try {
+                        const originalGetElementById = document.getElementById;
+                        document.getElementById = function (id) {
+                            if (id === 'youtubeChannelBtn') {
+                                const element = originalGetElementById.call(this, id);
+                                if (!element) {
+                                    setTimeout(restoreYouTubeLink, 10);
+                                }
+                                return element;
+                            }
+                            return originalGetElementById.call(this, id);
+                        };
+                    } catch (e) {
+                        console.log('Protection active');
+                    }
+                }
+
+                if (document.readyState === 'loading') {
+                    document.addEventListener('DOMContentLoaded', startProtection);
+                } else {
+                    startProtection();
+                }
+            })();
+
+            // ==========================================================================
+            // ТЕТРИС 20x40 · Оптимизированная версия с AI-ботом
+            // ==========================================================================
+
+            // Размер игрового поля
             const COLS = 20;
             const ROWS = 40;
             const BLOCK_SIZE = 40;
 
+            // Определение форм фигур (тетрамино)
             const SHAPES = [
-                { matrix: [[1, 1, 1, 1]], color: '#3cc7d6' },
-                { matrix: [[1, 1], [1, 1]], color: '#f7d84a' },
-                { matrix: [[0, 1, 0], [1, 1, 1]], color: '#b484e0' },
-                { matrix: [[0, 1, 1], [1, 1, 0]], color: '#7ec850' },
-                { matrix: [[1, 1, 0], [0, 1, 1]], color: '#e4685b' },
-                { matrix: [[1, 0, 0], [1, 1, 1]], color: '#f2a35e' },
-                { matrix: [[0, 0, 1], [1, 1, 1]], color: '#5b8cff' },
-                { matrix: [[1, 1, 1, 1], [1, 1, 1, 1]], color: '#c0a0e0' },
-                { matrix: [[0, 1, 1, 0], [0, 1, 1, 0]], color: '#a0d0a0' }
+                { matrix: [[1, 1, 1, 1]], color: '#3cc7d6' },     // I - голубой
+                { matrix: [[1, 1], [1, 1]], color: '#f7d84a' },   // O - желтый
+                { matrix: [[0, 1, 0], [1, 1, 1]], color: '#b484e0' }, // T - фиолетовый
+                { matrix: [[0, 1, 1], [1, 1, 0]], color: '#7ec850' }, // S - зеленый
+                { matrix: [[1, 1, 0], [0, 1, 1]], color: '#e4685b' }, // Z - красный
+                { matrix: [[1, 0, 0], [1, 1, 1]], color: '#f2a35e' }, // L - оранжевый
+                { matrix: [[0, 0, 1], [1, 1, 1]], color: '#5b8cff' }  // J - синий
             ];
 
+            // Состояние игры
             let board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
             let currentPiece = null;
             let nextPiece = null;
             let score = 0;
             let gameOver = false;
+            let gameStarted = false;
             let fallInterval = null;
+
+            // AI режим
+            let aiMode = false;
+            let aiInterval = null;
+            let aiThinking = false;
 
             // Управление скоростью
             let speedMultiplier = 1.0;
             const MIN_SPEED = 0.5;
-            const MAX_SPEED = 3.0;
-            const SPEED_STEP = 0.25;
+            const MAX_SPEED = 10.0;
+            const SPEED_STEP = 0.5;
             const BASE_INTERVAL = 500;
+            const COMFORT_SPEED = 2.0;
 
-            // Для drag-контроля
+            // Drag-управление
             let isDragging = false;
-            let dragStartX = 0;
-            let dragStartY = 0;
-            let lastMoveX = 0;
-            let lastMoveY = 0;
+            let dragStartX = 0, dragStartY = 0;
+            let lastMoveX = 0, lastMoveY = 0;
             let accumulatedRotation = 0;
             let lastRotationTime = 0;
             let dragMode = null;
 
             const DRAG_THRESHOLD = 20;
-
-            // Базовая чувствительность (при скорости 1.0)
             const BASE_ROTATION_SENSITIVITY = 150;
-
-            // Динамическая чувствительность зависит от скорости
-            function getRotationSensitivity() {
-                // Чем выше скорость, тем меньше пикселей нужно для поворота
-                // При скорости 3.0 нужно всего 50 пикселей
-                return Math.max(50, BASE_ROTATION_SENSITIVITY / speedMultiplier);
-            }
-
             const ROTATION_COOLDOWN = 200;
-
-            // Таймер для льготного периода после касания
-            let lockDelayTimer = null;
             const LOCK_DELAY = 300;
+            const BASE_MOVE_INTERVAL = 100;
 
-            // Для клавиатуры
+            // Клавиатурное управление
             let keyState = {};
-            const KEY_COOLDOWN = 80; // Базовый cooldown
-            let lastKeyTime = 0;
-
-            // Интервалы для удержания клавиш
             let horizontalInterval = null;
             let softDropInterval = null;
+            let isTouchDevice = false;
 
-            // Базовая скорость перемещения при удержании (чем меньше число, тем быстрее)
-            const BASE_MOVE_INTERVAL = 100; // мс между перемещениями при скорости 1.0
-
-            function getMoveInterval() {
-                // Чем выше скорость, тем быстрее перемещение
-                return Math.max(30, BASE_MOVE_INTERVAL / speedMultiplier);
-            }
-
+            // Элементы DOM
             const boardCanvas = document.getElementById('board');
             const ctx = boardCanvas.getContext('2d');
             const nextCanvas = document.getElementById('nextCanvas');
             const nextCtx = nextCanvas.getContext('2d');
             const scoreSpan = document.getElementById('scoreDisplay');
             const speedDisplay = document.getElementById('speedDisplay');
+            const resetBtn = document.getElementById('resetGame');
+            const aiBtn = document.getElementById('aiPlay');
+
+            // Вспомогательные функции
+            function rotateMatrix(matrix) {
+                return matrix[0].map((_, idx) => matrix.map(row => row[idx]).reverse());
+            }
 
             function randomPiece() {
                 const idx = Math.floor(Math.random() * SHAPES.length);
@@ -380,25 +609,6 @@
                     matrix: shape.matrix.map(row => [...row]),
                     color: shape.color
                 };
-            }
-
-            function spawnNewPiece() {
-                if (!nextPiece) {
-                    nextPiece = randomPiece();
-                }
-                currentPiece = {
-                    matrix: nextPiece.matrix.map(row => [...row]),
-                    color: nextPiece.color,
-                    x: Math.floor((COLS - nextPiece.matrix[0].length) / 2),
-                    y: 0
-                };
-                nextPiece = randomPiece();
-
-                if (collision(currentPiece.matrix, currentPiece.x, currentPiece.y)) {
-                    gameOver = true;
-                    clearInterval(fallInterval);
-                    fallInterval = null;
-                }
             }
 
             function collision(matrix, offsetX, offsetY) {
@@ -416,16 +626,22 @@
             }
 
             function canMoveDown() {
-                if (!currentPiece) return false;
+                if (!currentPiece || !gameStarted) return false;
                 return !collision(currentPiece.matrix, currentPiece.x, currentPiece.y + 1);
             }
 
-            function tryLockPiece() {
-                if (!currentPiece || gameOver) return false;
+            let lockDelayTimer = null;
 
-                if (canMoveDown()) {
-                    return false;
+            function resetLockTimer() {
+                if (lockDelayTimer) {
+                    clearTimeout(lockDelayTimer);
+                    lockDelayTimer = null;
                 }
+            }
+
+            function tryLockPiece() {
+                if (!currentPiece || gameOver || !gameStarted) return false;
+                if (canMoveDown()) return false;
 
                 if (!lockDelayTimer) {
                     lockDelayTimer = setTimeout(() => {
@@ -439,15 +655,8 @@
                 return true;
             }
 
-            function resetLockTimer() {
-                if (lockDelayTimer) {
-                    clearTimeout(lockDelayTimer);
-                    lockDelayTimer = null;
-                }
-            }
-
             function mergePiece() {
-                if (!currentPiece) return;
+                if (!currentPiece || !gameStarted) return;
 
                 resetLockTimer();
 
@@ -487,7 +696,7 @@
             }
 
             function movePiece(dx, dy) {
-                if (!currentPiece || gameOver) return false;
+                if (!currentPiece || gameOver || !gameStarted) return false;
 
                 const newX = currentPiece.x + dx;
                 const newY = currentPiece.y + dy;
@@ -505,55 +714,90 @@
                     return true;
                 } else if (dy === 1) {
                     tryLockPiece();
-                    return false;
                 }
                 return false;
             }
 
-            function rotatePiece() {
-                if (!currentPiece || gameOver) return;
-
-                const now = Date.now();
-                if (now - lastRotationTime < ROTATION_COOLDOWN) {
-                    return;
-                }
+            function rotatePiecePC() {
+                if (!currentPiece || gameOver || !gameStarted) return;
 
                 const matrix = currentPiece.matrix;
-                const rotated = matrix[0].map((_, idx) => matrix.map(row => row[idx]).reverse());
-
+                const rotated = rotateMatrix(matrix);
                 let offsetX = currentPiece.x;
+
                 if (!collision(rotated, offsetX, currentPiece.y)) {
                     currentPiece.matrix = rotated;
-                    lastRotationTime = now;
                     resetLockTimer();
-                } else {
-                    if (!collision(rotated, offsetX - 1, currentPiece.y)) {
-                        currentPiece.matrix = rotated;
-                        currentPiece.x -= 1;
-                        lastRotationTime = now;
-                        resetLockTimer();
-                    } else if (!collision(rotated, offsetX + 1, currentPiece.y)) {
-                        currentPiece.matrix = rotated;
-                        currentPiece.x += 1;
-                        lastRotationTime = now;
-                        resetLockTimer();
-                    } else if (!collision(rotated, offsetX - 2, currentPiece.y)) {
-                        currentPiece.matrix = rotated;
-                        currentPiece.x -= 2;
-                        lastRotationTime = now;
-                        resetLockTimer();
-                    } else if (!collision(rotated, offsetX + 2, currentPiece.y)) {
-                        currentPiece.matrix = rotated;
-                        currentPiece.x += 2;
-                        lastRotationTime = now;
-                        resetLockTimer();
-                    }
+                } else if (!collision(rotated, offsetX - 1, currentPiece.y)) {
+                    currentPiece.matrix = rotated;
+                    currentPiece.x -= 1;
+                    resetLockTimer();
+                } else if (!collision(rotated, offsetX + 1, currentPiece.y)) {
+                    currentPiece.matrix = rotated;
+                    currentPiece.x += 1;
+                    resetLockTimer();
+                } else if (!collision(rotated, offsetX - 2, currentPiece.y)) {
+                    currentPiece.matrix = rotated;
+                    currentPiece.x -= 2;
+                    resetLockTimer();
+                } else if (!collision(rotated, offsetX + 2, currentPiece.y)) {
+                    currentPiece.matrix = rotated;
+                    currentPiece.x += 2;
+                    resetLockTimer();
                 }
                 render();
             }
 
+            function rotatePieceMobile() {
+                if (!currentPiece || gameOver || !gameStarted) return;
+
+                const now = Date.now();
+                if (now - lastRotationTime < ROTATION_COOLDOWN) return;
+
+                const matrix = currentPiece.matrix;
+                const rotated = rotateMatrix(matrix);
+                let offsetX = currentPiece.x;
+
+                if (!collision(rotated, offsetX, currentPiece.y)) {
+                    currentPiece.matrix = rotated;
+                    lastRotationTime = now;
+                    resetLockTimer();
+                } else if (!collision(rotated, offsetX - 1, currentPiece.y)) {
+                    currentPiece.matrix = rotated;
+                    currentPiece.x -= 1;
+                    lastRotationTime = now;
+                    resetLockTimer();
+                } else if (!collision(rotated, offsetX + 1, currentPiece.y)) {
+                    currentPiece.matrix = rotated;
+                    currentPiece.x += 1;
+                    lastRotationTime = now;
+                    resetLockTimer();
+                } else if (!collision(rotated, offsetX - 2, currentPiece.y)) {
+                    currentPiece.matrix = rotated;
+                    currentPiece.x -= 2;
+                    lastRotationTime = now;
+                    resetLockTimer();
+                } else if (!collision(rotated, offsetX + 2, currentPiece.y)) {
+                    currentPiece.matrix = rotated;
+                    currentPiece.x += 2;
+                    lastRotationTime = now;
+                    resetLockTimer();
+                }
+                render();
+            }
+
+            function rotatePiece() {
+                if (aiMode) return;
+                if (isTouchDevice) {
+                    rotatePieceMobile();
+                } else {
+                    rotatePiecePC();
+                }
+            }
+
             function hardDrop() {
-                if (!currentPiece || gameOver) return;
+                if (aiMode) return;
+                if (!currentPiece || gameOver || !gameStarted) return;
 
                 resetLockTimer();
 
@@ -564,68 +808,30 @@
                 render();
             }
 
-            function render() {
-                ctx.clearRect(0, 0, boardCanvas.width, boardCanvas.height);
+            function spawnNewPiece() {
+                if (!gameStarted) return;
 
-                for (let row = 0; row < ROWS; row++) {
-                    for (let col = 0; col < COLS; col++) {
-                        const cell = board[row][col];
-                        if (cell !== 0) {
-                            ctx.fillStyle = cell;
-                            ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
-                            ctx.fillStyle = 'rgba(255,255,255,0.2)';
-                            ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE - 4, 4);
-                        } else {
-                            ctx.strokeStyle = '#20273f';
-                            ctx.lineWidth = 1;
-                            ctx.strokeRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
-                        }
-                    }
+                if (!nextPiece) {
+                    nextPiece = randomPiece();
                 }
+                currentPiece = {
+                    matrix: nextPiece.matrix.map(row => [...row]),
+                    color: nextPiece.color,
+                    x: Math.floor((COLS - nextPiece.matrix[0].length) / 2),
+                    y: 0
+                };
+                nextPiece = randomPiece();
 
-                if (currentPiece && !gameOver) {
-                    ctx.fillStyle = currentPiece.color;
-                    for (let r = 0; r < currentPiece.matrix.length; r++) {
-                        for (let c = 0; c < currentPiece.matrix[0].length; c++) {
-                            if (currentPiece.matrix[r][c] !== 0) {
-                                const x = (currentPiece.x + c) * BLOCK_SIZE;
-                                const y = (currentPiece.y + r) * BLOCK_SIZE;
-                                ctx.fillRect(x, y, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
-                                ctx.fillStyle = 'rgba(255,255,255,0.3)';
-                                ctx.fillRect(x, y, BLOCK_SIZE - 8, 4);
-                                ctx.fillStyle = currentPiece.color;
-                            }
-                        }
-                    }
+                if (collision(currentPiece.matrix, currentPiece.x, currentPiece.y)) {
+                    gameOver = true;
+                    gameStarted = false;
+                    aiMode = false;
+                    clearInterval(fallInterval);
+                    fallInterval = null;
+                    stopAIMode();
+                    updateButtonText();
                 }
-
-                if (gameOver) {
-                    ctx.globalAlpha = 0.5;
-                    ctx.fillStyle = '#330000';
-                    ctx.fillRect(0, 0, boardCanvas.width, boardCanvas.height);
-                    ctx.globalAlpha = 1.0;
-                    ctx.fillStyle = '#fff';
-                    ctx.font = 'bold 48px system-ui, sans-serif';
-                    ctx.textAlign = 'center';
-                    ctx.fillText('GAME OVER', 400, 800);
-                }
-
-                nextCtx.clearRect(0, 0, 140, 140);
-                if (nextPiece) {
-                    const matrix = nextPiece.matrix;
-                    const color = nextPiece.color;
-                    const blockSize = 30;
-                    const offsetX = (140 - matrix[0].length * blockSize) / 2;
-                    const offsetY = (140 - matrix.length * blockSize) / 2;
-                    for (let r = 0; r < matrix.length; r++) {
-                        for (let c = 0; c < matrix[0].length; c++) {
-                            if (matrix[r][c]) {
-                                nextCtx.fillStyle = color;
-                                nextCtx.fillRect(offsetX + c * blockSize, offsetY + r * blockSize, blockSize - 2, blockSize - 2);
-                            }
-                        }
-                    }
-                }
+                render();
             }
 
             function updateScore() {
@@ -639,10 +845,14 @@
             function updateFallInterval() {
                 if (fallInterval) {
                     clearInterval(fallInterval);
+                    fallInterval = null;
                 }
+
+                if (!gameStarted || gameOver) return;
+
                 const intervalTime = BASE_INTERVAL / speedMultiplier;
                 fallInterval = setInterval(() => {
-                    if (!gameOver && currentPiece) {
+                    if (!gameOver && gameStarted && currentPiece) {
                         movePiece(0, 1);
                     }
                 }, intervalTime);
@@ -653,14 +863,6 @@
                     speedMultiplier = Math.min(speedMultiplier + SPEED_STEP, MAX_SPEED);
                     updateSpeedDisplay();
                     updateFallInterval();
-
-                    // Обновляем интервалы удержания клавиш при изменении скорости
-                    if (keyState['ArrowLeft'] || keyState['ArrowRight']) {
-                        restartHorizontalInterval();
-                    }
-                    if (keyState['ArrowDown']) {
-                        restartSoftDropInterval();
-                    }
                 }
             }
 
@@ -669,40 +871,275 @@
                     speedMultiplier = Math.max(speedMultiplier - SPEED_STEP, MIN_SPEED);
                     updateSpeedDisplay();
                     updateFallInterval();
-
-                    // Обновляем интервалы удержания клавиш при изменении скорости
-                    if (keyState['ArrowLeft'] || keyState['ArrowRight']) {
-                        restartHorizontalInterval();
-                    }
-                    if (keyState['ArrowDown']) {
-                        restartSoftDropInterval();
-                    }
                 }
             }
 
-            function startFallInterval() {
+            function updateButtonText() {
+                if (!gameStarted && !gameOver) {
+                    resetBtn.innerHTML = '▶ Новая игра';
+                    aiBtn.innerHTML = '🤖 Batrak';
+                } else if (gameStarted && !gameOver) {
+                    if (aiMode) {
+                        resetBtn.innerHTML = '⏹ Остановить';
+                        aiBtn.innerHTML = '🤖 Шарашит...';
+                    } else {
+                        resetBtn.innerHTML = '⏹ Сброс';
+                        aiBtn.innerHTML = '🤖 Play';
+                    }
+                } else if (gameOver) {
+                    resetBtn.innerHTML = '↻ Играть снова';
+                    aiBtn.innerHTML = '🤖 Play';
+                }
+            }
+
+            function startGame() {
+                if (gameStarted && !gameOver) return;
+
+                stopAIMode();
+
+                board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+                score = 0;
+                gameOver = false;
+                gameStarted = true;
+                aiMode = false;
+                keyState = {};
+
+                clearAllIntervals();
+                resetLockTimer();
+
+                updateScore();
+                nextPiece = randomPiece();
+                spawnNewPiece();
                 updateFallInterval();
+                updateButtonText();
+                render();
             }
 
             function resetGame() {
+                stopAIMode();
+
                 if (fallInterval) clearInterval(fallInterval);
                 resetLockTimer();
-
-                // Очищаем все интервалы клавиатуры
                 clearAllIntervals();
 
                 board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
                 score = 0;
                 gameOver = false;
+                gameStarted = false;
+                aiMode = false;
                 keyState = {};
+
+                updateScore();
+                nextPiece = null;
+                currentPiece = null;
+                updateButtonText();
+                render();
+            }
+
+            // AI функции
+            function findBestMove() {
+                if (!currentPiece) return null;
+
+                let bestMove = {
+                    rotation: 0,
+                    x: currentPiece.x,
+                    score: -Infinity
+                };
+
+                for (let rot = 0; rot < 4; rot++) {
+                    let testMatrix = currentPiece.matrix;
+                    for (let r = 0; r < rot; r++) {
+                        testMatrix = rotateMatrix(testMatrix);
+                    }
+
+                    let minX = 0;
+                    let maxX = COLS - testMatrix[0].length;
+
+                    for (let testX = minX; testX <= maxX; testX++) {
+                        if (collision(testMatrix, testX, currentPiece.y)) continue;
+
+                        let testY = currentPiece.y;
+                        while (!collision(testMatrix, testX, testY + 1)) {
+                            testY++;
+                        }
+
+                        let moveScore = evaluatePosition(testMatrix, testX, testY, board);
+
+                        if (moveScore > bestMove.score) {
+                            bestMove = {
+                                rotation: rot,
+                                x: testX,
+                                score: moveScore
+                            };
+                        }
+                    }
+                }
+
+                return bestMove;
+            }
+
+            function evaluatePosition(matrix, x, y, boardState) {
+                let score = 0;
+                let testBoard = JSON.parse(JSON.stringify(boardState));
+
+                for (let r = 0; r < matrix.length; r++) {
+                    for (let c = 0; c < matrix[0].length; c++) {
+                        if (matrix[r][c]) {
+                            if (y + r >= 0 && y + r < ROWS && x + c >= 0 && x + c < COLS) {
+                                testBoard[y + r][x + c] = 1;
+                            }
+                        }
+                    }
+                }
+
+                score += (ROWS - y) * 5;
+
+                let rowsFilled = 0;
+                for (let row = 0; row < ROWS; row++) {
+                    if (testBoard[row].every(cell => cell !== 0)) {
+                        rowsFilled++;
+                    }
+                }
+                score += rowsFilled * 1000;
+
+                let holes = 0;
+                for (let col = 0; col < COLS; col++) {
+                    let blockFound = false;
+                    for (let row = 0; row < ROWS; row++) {
+                        if (testBoard[row][col] !== 0) {
+                            blockFound = true;
+                        } else if (blockFound) {
+                            holes++;
+                        }
+                    }
+                }
+                score -= holes * 30;
+
+                let maxHeight = 0;
+                let totalHeight = 0;
+                for (let col = 0; col < COLS; col++) {
+                    let height = 0;
+                    for (let row = 0; row < ROWS; row++) {
+                        if (testBoard[row][col] !== 0) {
+                            height = ROWS - row;
+                            break;
+                        }
+                    }
+                    totalHeight += height;
+                    maxHeight = Math.max(maxHeight, height);
+                }
+                score -= totalHeight * 2;
+                score -= maxHeight * 10;
+
+                let heights = [];
+                for (let col = 0; col < COLS; col++) {
+                    let height = 0;
+                    for (let row = 0; row < ROWS; row++) {
+                        if (testBoard[row][col] !== 0) {
+                            height = ROWS - row;
+                            break;
+                        }
+                    }
+                    heights.push(height);
+                }
+
+                let roughness = 0;
+                for (let i = 0; i < heights.length - 1; i++) {
+                    roughness += Math.abs(heights[i] - heights[i + 1]);
+                }
+                score -= roughness * 3;
+
+                return score;
+            }
+
+            async function makeAIMove() {
+                if (!gameStarted || gameOver || !currentPiece || aiThinking) return;
+
+                aiThinking = true;
+                const bestMove = findBestMove();
+
+                if (!bestMove) {
+                    aiThinking = false;
+                    return;
+                }
+
+                for (let r = 0; r < bestMove.rotation; r++) {
+                    rotatePiecePC();
+                    await new Promise(resolve => setTimeout(resolve, 30));
+                }
+
+                const targetX = bestMove.x;
+                const moveDirection = targetX > currentPiece.x ? 1 : -1;
+                const movesNeeded = Math.abs(targetX - currentPiece.x);
+
+                for (let i = 0; i < movesNeeded; i++) {
+                    movePiece(moveDirection, 0);
+                    await new Promise(resolve => setTimeout(resolve, 20));
+                }
+
+                setTimeout(() => {
+                    if (currentPiece && gameStarted && !gameOver) {
+                        hardDrop();
+                    }
+                    aiThinking = false;
+                }, 50);
+            }
+
+            function startAIMode() {
+                if (fallInterval) clearInterval(fallInterval);
+                resetLockTimer();
+                clearAllIntervals();
+
+                board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
+                score = 0;
+                gameOver = false;
+                gameStarted = true;
+                aiMode = true;
+                keyState = {};
+
                 updateScore();
                 nextPiece = randomPiece();
                 spawnNewPiece();
+                updateFallInterval();
+                updateButtonText();
+
+                if (aiInterval) clearInterval(aiInterval);
+                aiInterval = setInterval(() => {
+                    if (gameStarted && !gameOver && currentPiece && !aiThinking) {
+                        makeAIMove();
+                    }
+                }, 200);
+
                 render();
-                startFallInterval();
             }
 
-            // --- УЛУЧШЕННОЕ КЛАВИАТУРНОЕ УПРАВЛЕНИЕ С УЧЕТОМ СКОРОСТИ ---
+            function stopAIMode() {
+                aiMode = false;
+                if (aiInterval) {
+                    clearInterval(aiInterval);
+                    aiInterval = null;
+                }
+                aiThinking = false;
+            }
+
+            function detectDeviceType() {
+                isTouchDevice = ('ontouchstart' in window) || (navigator.maxTouchPoints > 0);
+            }
+
+            function getEffectiveSpeedForControls() {
+                if (!gameStarted) return COMFORT_SPEED;
+                return Math.min(speedMultiplier, COMFORT_SPEED);
+            }
+
+            function getRotationSensitivity() {
+                const effectiveSpeed = getEffectiveSpeedForControls();
+                return Math.max(15, BASE_ROTATION_SENSITIVITY / effectiveSpeed);
+            }
+
+            function getMoveInterval() {
+                const effectiveSpeed = getEffectiveSpeedForControls();
+                return Math.max(10, BASE_MOVE_INTERVAL / effectiveSpeed);
+            }
 
             function clearAllIntervals() {
                 if (horizontalInterval) {
@@ -721,16 +1158,14 @@
                     horizontalInterval = null;
                 }
 
-                if (!currentPiece || gameOver) return;
+                if (!currentPiece || gameOver || !gameStarted || aiMode) return;
 
                 const direction = keyState['ArrowLeft'] ? -1 : (keyState['ArrowRight'] ? 1 : 0);
                 if (direction !== 0) {
-                    // Первое перемещение сразу
                     movePiece(direction, 0);
 
-                    // Затем с интервалом, зависящим от скорости
                     horizontalInterval = setInterval(() => {
-                        if (!currentPiece || gameOver || (!keyState['ArrowLeft'] && !keyState['ArrowRight'])) {
+                        if (!currentPiece || gameOver || !gameStarted || aiMode || (!keyState['ArrowLeft'] && !keyState['ArrowRight'])) {
                             clearInterval(horizontalInterval);
                             horizontalInterval = null;
                             return;
@@ -749,38 +1184,34 @@
                     softDropInterval = null;
                 }
 
-                if (!currentPiece || gameOver || !keyState['ArrowDown']) return;
+                if (!currentPiece || gameOver || !gameStarted || aiMode || !keyState['ArrowDown']) return;
 
-                // Первое падение сразу
                 movePiece(0, 1);
 
-                // Затем с интервалом, зависящим от скорости (немного быстрее обычного падения)
                 softDropInterval = setInterval(() => {
-                    if (!currentPiece || gameOver || !keyState['ArrowDown']) {
+                    if (!currentPiece || gameOver || !gameStarted || aiMode || !keyState['ArrowDown']) {
                         clearInterval(softDropInterval);
                         softDropInterval = null;
                         return;
                     }
                     movePiece(0, 1);
-                }, getMoveInterval() * 0.8); // На 20% быстрее горизонтального перемещения
+                }, getMoveInterval() * 0.8);
             }
 
             function setupKeyboardControls() {
-                // Флаг для защиты от множественных вызовов hardDrop
                 let spacePressed = false;
+                let lastRotateTime = 0;
+                const PC_ROTATION_COOLDOWN = 30;
 
                 window.addEventListener('keydown', (e) => {
-                    // Игнорируем, если игра неактивна или нажат модификатор
-                    if (gameOver || !currentPiece || e.altKey || e.ctrlKey || e.metaKey) return;
+                    if (!gameStarted || gameOver || !currentPiece || aiMode || e.altKey || e.ctrlKey || e.metaKey) return;
 
                     const key = e.key;
 
-                    // Предотвращаем прокрутку страницы
                     if (key.startsWith('Arrow') || key === ' ') {
                         e.preventDefault();
                     }
 
-                    // Обработка пробела с защитой от повторных вызовов
                     if (key === ' ' || key === 'Space') {
                         if (!spacePressed) {
                             spacePressed = true;
@@ -789,21 +1220,24 @@
                         return;
                     }
 
-                    const now = Date.now();
-
                     if (key === 'ArrowUp') {
-                        rotatePiece();
+                        if (isTouchDevice) {
+                            rotatePieceMobile();
+                        } else {
+                            const now = Date.now();
+                            if (now - lastRotateTime > PC_ROTATION_COOLDOWN) {
+                                rotatePiecePC();
+                                lastRotateTime = now;
+                            }
+                        }
                         return;
                     }
 
-                    // Для стрелок влево/вправо/вниз используем удержание
                     if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'ArrowDown') {
-                        // Если клавиша уже нажата, игнорируем повторные события
                         if (keyState[key]) return;
 
                         keyState[key] = true;
 
-                        // Запускаем соответствующий интервал
                         if (key === 'ArrowLeft' || key === 'ArrowRight') {
                             restartHorizontalInterval();
                         } else if (key === 'ArrowDown') {
@@ -815,7 +1249,6 @@
                 window.addEventListener('keyup', (e) => {
                     const key = e.key;
 
-                    // Сбрасываем флаг пробела при отпускании
                     if (key === ' ' || key === 'Space') {
                         spacePressed = false;
                         e.preventDefault();
@@ -825,12 +1258,10 @@
                     if (key === 'ArrowLeft' || key === 'ArrowRight' || key === 'ArrowDown') {
                         keyState[key] = false;
 
-                        // Перезапускаем горизонтальный интервал, если другая стрелка еще нажата
                         if (key === 'ArrowLeft' || key === 'ArrowRight') {
                             if (keyState['ArrowLeft'] || keyState['ArrowRight']) {
                                 restartHorizontalInterval();
                             } else {
-                                // Очищаем интервал, если обе клавиши отпущены
                                 if (horizontalInterval) {
                                     clearInterval(horizontalInterval);
                                     horizontalInterval = null;
@@ -845,14 +1276,12 @@
                     }
                 });
 
-                // Очищаем состояние клавиш при потере фокуса
                 window.addEventListener('blur', () => {
                     keyState = {};
                     spacePressed = false;
                     clearAllIntervals();
                 });
 
-                // Очищаем при сворачивании окна
                 window.addEventListener('visibilitychange', () => {
                     if (document.hidden) {
                         keyState = {};
@@ -862,7 +1291,6 @@
                 });
             }
 
-            // Сенсорное управление (без изменений, но с учетом скорости)
             function setupTouchControls() {
                 const canvas = boardCanvas;
 
@@ -872,6 +1300,9 @@
 
                 canvas.addEventListener('touchstart', (e) => {
                     e.preventDefault();
+
+                    if (!gameStarted || gameOver || aiMode) return;
+
                     const touch = e.touches[0];
                     touchStartX = touch.clientX;
                     touchStartY = touch.clientY;
@@ -885,14 +1316,13 @@
                     accumulatedRotation = 0;
                     dragMode = null;
 
-                    // При касании экрана очищаем состояние клавиатуры
                     keyState = {};
                     clearAllIntervals();
                 }, { passive: false });
 
                 canvas.addEventListener('touchmove', (e) => {
                     e.preventDefault();
-                    if (!currentPiece || gameOver) return;
+                    if (!currentPiece || gameOver || !gameStarted || aiMode) return;
 
                     const touch = e.touches[0];
                     const currentX = touch.clientX;
@@ -934,7 +1364,7 @@
 
                                 const currentSensitivity = getRotationSensitivity();
                                 if (accumulatedRotation > currentSensitivity) {
-                                    rotatePiece();
+                                    rotatePieceMobile();
                                     accumulatedRotation = 0;
                                     lastMoveY = currentY;
                                 }
@@ -949,6 +1379,9 @@
 
                 canvas.addEventListener('touchend', (e) => {
                     e.preventDefault();
+
+                    if (!gameStarted || gameOver || aiMode) return;
+
                     if (!touchStartX) return;
 
                     const touchEnd = e.changedTouches[0];
@@ -976,8 +1409,11 @@
                         if (diffX > 0) movePiece(1, 0);
                         else movePiece(-1, 0);
                     }
-                    else if (Math.abs(diffY) > 20 && diffY < 0) {
-                        rotatePiece();
+                    else if (diffY < 0) {
+                        const speed = Math.abs(diffY) / timeDiff;
+                        if ((speed > 0.3 && Math.abs(diffY) > 10) || Math.abs(diffY) > 25) {
+                            rotatePieceMobile();
+                        }
                     }
                     else if (Math.abs(diffY) > 20 && diffY > 0) {
                         hardDrop();
@@ -985,12 +1421,13 @@
                     else if (Math.abs(diffX) < 15 && Math.abs(diffY) < 15) {
                         const rect = canvas.getBoundingClientRect();
                         const touchX = touchEnd.clientX - rect.left;
+
                         if (touchX < rect.width / 3) {
                             movePiece(-1, 0);
                         } else if (touchX > (rect.width / 3) * 2) {
                             movePiece(1, 0);
                         } else {
-                            rotatePiece();
+                            rotatePieceMobile();
                         }
                     }
 
@@ -1014,12 +1451,157 @@
                 });
             }
 
+            function renderStartScreen() {
+                ctx.clearRect(0, 0, boardCanvas.width, boardCanvas.height);
+
+                for (let row = 0; row < ROWS; row++) {
+                    for (let col = 0; col < COLS; col++) {
+                        ctx.strokeStyle = '#20273f';
+                        ctx.lineWidth = 1;
+                        ctx.strokeRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                    }
+                }
+
+                ctx.globalAlpha = 0.9;
+                ctx.fillStyle = '#1a1f2f';
+                ctx.fillRect(0, 0, boardCanvas.width, boardCanvas.height);
+                ctx.globalAlpha = 1.0;
+
+                ctx.fillStyle = '#ffe484';
+                ctx.font = 'bold 40px system-ui, sans-serif';
+                ctx.textAlign = 'center';
+                ctx.fillText('ТЕТРИС', 400, 600);
+
+                ctx.font = '20px system-ui, sans-serif';
+                ctx.fillStyle = '#a9b7d4';
+                ctx.fillText('Нажмите "Новая игра" или "Play"', 400, 750);
+
+                ctx.font = '16px system-ui, sans-serif';
+                ctx.fillStyle = '#7b88aa';
+                ctx.fillText('Выберите скорость и начинайте', 400, 830);
+
+                nextCtx.clearRect(0, 0, 140, 140);
+                nextCtx.fillStyle = '#323d5e';
+                nextCtx.fillRect(0, 0, 140, 140);
+                nextCtx.fillStyle = '#7b88aa';
+                nextCtx.font = '14px system-ui, sans-serif';
+                nextCtx.textAlign = 'center';
+                nextCtx.fillText('ждем', 70, 75);
+                nextCtx.fillText('старта', 70, 95);
+            }
+
+            function render() {
+                if (!gameStarted && !gameOver) {
+                    renderStartScreen();
+                    return;
+                }
+
+                ctx.clearRect(0, 0, boardCanvas.width, boardCanvas.height);
+
+                for (let row = 0; row < ROWS; row++) {
+                    for (let col = 0; col < COLS; col++) {
+                        const cell = board[row][col];
+                        if (cell !== 0) {
+                            ctx.fillStyle = cell;
+                            ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
+                            ctx.fillStyle = 'rgba(255,255,255,0.2)';
+                            ctx.fillRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE - 4, 4);
+                        } else {
+                            ctx.strokeStyle = '#20273f';
+                            ctx.lineWidth = 1;
+                            ctx.strokeRect(col * BLOCK_SIZE, row * BLOCK_SIZE, BLOCK_SIZE, BLOCK_SIZE);
+                        }
+                    }
+                }
+
+                if (currentPiece && !gameOver && gameStarted) {
+                    ctx.fillStyle = currentPiece.color;
+                    for (let r = 0; r < currentPiece.matrix.length; r++) {
+                        for (let c = 0; c < currentPiece.matrix[0].length; c++) {
+                            if (currentPiece.matrix[r][c] !== 0) {
+                                const x = (currentPiece.x + c) * BLOCK_SIZE;
+                                const y = (currentPiece.y + r) * BLOCK_SIZE;
+                                ctx.fillRect(x, y, BLOCK_SIZE - 1, BLOCK_SIZE - 1);
+                                ctx.fillStyle = 'rgba(255,255,255,0.3)';
+                                ctx.fillRect(x, y, BLOCK_SIZE - 8, 4);
+                                ctx.fillStyle = currentPiece.color;
+                            }
+                        }
+                    }
+                }
+
+                if (gameOver) {
+                    ctx.globalAlpha = 0.7;
+                    ctx.fillStyle = '#330000';
+                    ctx.fillRect(0, 0, boardCanvas.width, boardCanvas.height);
+                    ctx.globalAlpha = 1.0;
+                    ctx.fillStyle = '#fff';
+                    ctx.font = 'bold 36px system-ui, sans-serif';
+                    ctx.textAlign = 'center';
+                    ctx.fillText('GAME OVER', 400, 800);
+                }
+
+                nextCtx.clearRect(0, 0, 140, 140);
+                if (nextPiece && gameStarted) {
+                    const matrix = nextPiece.matrix;
+                    const color = nextPiece.color;
+                    const blockSize = 30;
+                    const offsetX = (140 - matrix[0].length * blockSize) / 2;
+                    const offsetY = (140 - matrix.length * blockSize) / 2;
+
+                    for (let r = 0; r < matrix.length; r++) {
+                        for (let c = 0; c < matrix[0].length; c++) {
+                            if (matrix[r][c]) {
+                                nextCtx.fillStyle = color;
+                                nextCtx.fillRect(offsetX + c * blockSize, offsetY + r * blockSize, blockSize - 2, blockSize - 2);
+                            }
+                        }
+                    }
+                } else if (!gameStarted) {
+                    nextCtx.fillStyle = '#323d5e';
+                    nextCtx.fillRect(0, 0, 140, 140);
+                    nextCtx.fillStyle = '#7b88aa';
+                    nextCtx.font = '14px system-ui, sans-serif';
+                    nextCtx.textAlign = 'center';
+                    nextCtx.fillText('ждем', 70, 75);
+                    nextCtx.fillText('старта', 70, 95);
+                }
+            }
+
             function initGame() {
-                resetGame();
+                detectDeviceType();
+
+                gameStarted = false;
+                gameOver = false;
+                render();
+                updateButtonText();
+
                 setupTouchControls();
                 setupKeyboardControls();
                 setupSpeedControls();
-                document.getElementById('resetGame').addEventListener('click', resetGame);
+
+                resetBtn.addEventListener('click', () => {
+                    if (aiMode) stopAIMode();
+
+                    if (!gameStarted && !gameOver) {
+                        startGame();
+                    } else if (gameStarted && !gameOver) {
+                        resetGame();
+                    } else if (gameOver) {
+                        startGame();
+                    }
+                });
+
+                aiBtn.addEventListener('click', () => {
+                    if (aiMode) {
+                        stopAIMode();
+                        resetGame();
+                    } else {
+                        startAIMode();
+                    }
+                    updateButtonText();
+                });
+
                 updateSpeedDisplay();
             }
 
