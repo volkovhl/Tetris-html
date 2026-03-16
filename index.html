@@ -461,6 +461,17 @@
             border: 1px solid #ff8888;
         }
 
+        /* Стили для подсказок ПК */
+        .pc-hint {
+            display: none;
+        }
+
+        @media (hover: hover) and (pointer: fine) {
+            .pc-hint {
+                display: flex;
+            }
+        }
+
         /* ========== АДАПТИВ ДЛЯ РАЗНЫХ ЭКРАНОВ ========== */
         @media (max-height: 700px) {
             .header {
@@ -834,6 +845,9 @@
             <button class="laser-toggle inactive" id="laserToggleBtn" title="Вкл/Выкл лазерный палец (уничтожай блоки)">
                 <i>🔫</i> <span id="laserToggleText">выкл</span>
             </button>
+            <!-- Обновленные подсказки для ПК -->
+            <span class="pc-hint"><i>⌨️</i> [Alt] + стрелки</span>
+            <span class="pc-hint"><i>🖱️</i> ЛКМ / [пробел]</span>
             <span><i>👆</i> тап</span>
         </div>
 
@@ -976,6 +990,14 @@
             const LASER_FIRE_RATE = 50; // миллисекунд между выстрелами (20 выстрелов в секунду)
             const LASER_RADIUS = 2; // радиус поражения (сколько клеток вниз уничтожается за раз)
 
+            // НОВОЕ: Переменные для лазера на Alt + мышь
+            let laserCursorX = Math.floor(COLS / 2);
+            let laserCursorY = Math.floor(ROWS / 2);
+            let lastLaserFireTime = 0;
+            let vPressed = false;
+            let laserActiveByV = false;
+            let mouseLaserActive = false;
+
             // Drag-управление
             let isDragging = false;
             let dragStartX = 0, dragStartY = 0;
@@ -1031,6 +1053,13 @@
                 }
                 laserModeEnabled = !laserModeEnabled;
                 updateLaserToggleButton();
+
+                // Сбрасываем флаги Alt-режима
+                if (!laserModeEnabled) {
+                    laserActiveByAlt = false;
+                    altPressed = false;
+                    mouseLaserActive = false;
+                }
 
                 // Показываем/скрываем индикатор
                 if (laserIndicator) {
@@ -1123,6 +1152,11 @@
             // НОВОЕ: Функция выстрела лазером
             function fireLaser(col, row) {
                 if (!laserModeEnabled || aiMode || !gameStarted || gameOver) return;
+
+                // Проверяем скорострельность
+                const now = Date.now();
+                if (now - lastLaserFireTime < LASER_FIRE_RATE) return;
+                lastLaserFireTime = now;
 
                 let blocksDestroyed = 0;
 
@@ -1851,10 +1885,102 @@
                 const PC_ROTATION_COOLDOWN = 30;
 
                 window.addEventListener('keydown', (e) => {
-                    if (!gameStarted || gameOver || !currentPiece || aiMode || e.altKey || e.ctrlKey || e.metaKey) return;
-
                     const key = e.key;
+                    const isAlt = key === 'Alt' || e.altKey;
 
+                    // Клавиша V нажата - включаем лазерный режим (удерживание)
+                    if (key === 'v' || key === 'V') {
+                        e.preventDefault();
+
+                        if (aiMode) {
+                            alert('Выключите Батрака перед использованием лазера!');
+                            return;
+                        }
+
+                        if (!vPressed) {  // используем новую переменную vPressed
+                            vPressed = true;
+
+                            // Включаем лазерный режим через V
+                            if (!laserModeEnabled) {
+                                laserModeEnabled = true;
+                                laserActiveByV = true;  // новая переменная
+                                updateLaserToggleButton();
+                                if (laserIndicator) {
+                                    laserIndicator.style.display = 'block';
+                                }
+
+                                // Ставим курсор по центру при включении
+                                laserCursorX = Math.floor(COLS / 2);
+                                laserCursorY = Math.floor(ROWS / 2);
+                                render();
+                            }
+                        }
+                        return;
+                    }
+
+                    // Клавиша L как запасной вариант вкл/выкл
+                    if (key === 'l' || key === 'L') {
+                        e.preventDefault();
+                        if (aiMode) {
+                            alert('Выключите Батрака перед использованием лазера!');
+                            return;
+                        }
+                        toggleLaserMode();
+                        if (laserModeEnabled) {
+                            laserCursorX = Math.floor(COLS / 2);
+                            laserCursorY = Math.floor(ROWS / 2);
+                        }
+                        return;
+                    }
+
+                    // Если игра не активна - выходим
+                    if (!gameStarted || gameOver || !currentPiece || aiMode) {
+                        return;
+                    }
+
+                    // Если лазерный режим включен - управляем прицелом стрелками
+                    if (laserModeEnabled) {
+                        // Управление прицелом стрелками
+                        if (key === 'ArrowLeft') {
+                            e.preventDefault();
+                            laserCursorX = Math.max(0, laserCursorX - 1);
+                            render();
+                            return;
+                        }
+                        if (key === 'ArrowRight') {
+                            e.preventDefault();
+                            laserCursorX = Math.min(COLS - 1, laserCursorX + 1);
+                            render();
+                            return;
+                        }
+                        if (key === 'ArrowUp') {
+                            e.preventDefault();
+                            laserCursorY = Math.max(0, laserCursorY - 1);
+                            render();
+                            return;
+                        }
+                        if (key === 'ArrowDown') {
+                            e.preventDefault();
+                            laserCursorY = Math.min(ROWS - 1, laserCursorY + 1);
+                            render();
+                            return;
+                        }
+
+                        // Стрельба по пробелу
+                        if (key === ' ' || key === 'Space') {
+                            e.preventDefault();
+                            fireLaser(laserCursorX, laserCursorY);
+                            return;
+                        }
+
+                        // Остальные клавиши игнорируем в лазерном режиме
+                        if (key.startsWith('Arrow')) {
+                            e.preventDefault();
+                            return;
+                        }
+                    }
+
+                    // Стандартная обработка клавиш для управления фигурой (только если лазер выключен)
                     if (key.startsWith('Arrow') || key === ' ') {
                         e.preventDefault();
                     }
@@ -1896,6 +2022,28 @@
                 window.addEventListener('keyup', (e) => {
                     const key = e.key;
 
+                    // Клавиша V отпущена - выключаем лазерный режим
+                    if (key === 'v' || key === 'V') {
+                        e.preventDefault();
+
+                        if (vPressed) {
+                            vPressed = false;
+
+                            // Выключаем лазерный режим только если он был включен через V
+                            if (laserActiveByV && laserModeEnabled) {
+                                laserModeEnabled = false;
+                                laserActiveByV = false;
+                                updateLaserToggleButton();
+                                if (laserIndicator) {
+                                    laserIndicator.style.display = 'none';
+                                }
+                                deactivateLaser();
+                                render();
+                            }
+                        }
+                        return;
+                    }
+
                     if (key === ' ' || key === 'Space') {
                         spacePressed = false;
                         e.preventDefault();
@@ -1922,10 +2070,24 @@
                         }
                     }
                 });
+
                 window.addEventListener('blur', () => {
                     keyState = {};
                     spacePressed = false;
                     clearAllIntervals();
+
+                    // Сбрасываем Alt-лазер при потере фокуса
+                    if (laserActiveByAlt) {
+                        laserModeEnabled = false;
+                        laserActiveByAlt = false;
+                        altPressed = false;
+                        updateLaserToggleButton();
+                        if (laserIndicator) {
+                            laserIndicator.style.display = 'none';
+                        }
+                        deactivateLaser();
+                        render();
+                    }
                 });
 
                 window.addEventListener('visibilitychange', () => {
@@ -1933,6 +2095,19 @@
                         keyState = {};
                         spacePressed = false;
                         clearAllIntervals();
+
+                        // Сбрасываем V-лазер при потере фокуса
+                        if (laserActiveByV) {
+                            laserModeEnabled = false;
+                            laserActiveByV = false;
+                            vPressed = false;
+                            updateLaserToggleButton();
+                            if (laserIndicator) {
+                                laserIndicator.style.display = 'none';
+                            }
+                            deactivateLaser();
+                            render();
+                        }
                     }
                 });
             }
@@ -1944,6 +2119,79 @@
                 let touchStartTime = 0;
                 const LONG_TAP_DELAY = 200;
 
+                // Обработка мыши для ПК (лазер)
+                canvas.addEventListener('mousemove', (e) => {
+                    if (!laserModeEnabled || aiMode || !gameStarted || gameOver) return;
+
+                    const rect = canvas.getBoundingClientRect();
+                    const scaleX = canvas.width / rect.width;
+                    const scaleY = canvas.height / rect.height;
+
+                    const mouseX = (e.clientX - rect.left) * scaleX;
+                    const mouseY = (e.clientY - rect.top) * scaleY;
+
+                    const col = Math.floor(mouseX / BLOCK_SIZE);
+                    const row = Math.floor(mouseY / BLOCK_SIZE);
+
+                    if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
+                        laserCursorX = col;
+                        laserCursorY = row;
+                        render();
+                    }
+                });
+
+                // Стрельба по нажатию левой кнопки мыши
+                canvas.addEventListener('mousedown', (e) => {
+                    if (e.button !== 0) return; // Только левая кнопка
+
+                    if (!laserModeEnabled || aiMode || !gameStarted || gameOver) return;
+
+                    e.preventDefault();
+
+                    // Активируем режим стрельбы мышью
+                    mouseLaserActive = true;
+
+                    // Немедленный выстрел
+                    fireLaser(laserCursorX, laserCursorY);
+                });
+
+                // Стрельба при движении с зажатой кнопкой
+                canvas.addEventListener('mousemove', (e) => {
+                    if (!mouseLaserActive || !laserModeEnabled || aiMode || !gameStarted || gameOver) return;
+
+                    const rect = canvas.getBoundingClientRect();
+                    const scaleX = canvas.width / rect.width;
+                    const scaleY = canvas.height / rect.height;
+
+                    const mouseX = (e.clientX - rect.left) * scaleX;
+                    const mouseY = (e.clientY - rect.top) * scaleY;
+
+                    const col = Math.floor(mouseX / BLOCK_SIZE);
+                    const row = Math.floor(mouseY / BLOCK_SIZE);
+
+                    if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
+                        // Если позиция изменилась - стреляем
+                        if (col !== laserCursorX || row !== laserCursorY) {
+                            laserCursorX = col;
+                            laserCursorY = row;
+                            fireLaser(laserCursorX, laserCursorY);
+                            render();
+                        }
+                    }
+                });
+
+                // Отпускание кнопки мыши
+                canvas.addEventListener('mouseup', (e) => {
+                    if (e.button !== 0) return;
+                    mouseLaserActive = false;
+                });
+
+                // При выходе мыши за пределы канваса
+                canvas.addEventListener('mouseleave', () => {
+                    mouseLaserActive = false;
+                });
+
+                // Существующий touch-код
                 canvas.addEventListener('touchstart', (e) => {
                     e.preventDefault();
 
@@ -1962,7 +2210,7 @@
                     accumulatedRotation = 0;
                     dragMode = null;
 
-                    // НОВОЕ: Активируем лазер если режим включен
+                    // Активируем лазер если режим включен
                     if (laserModeEnabled) {
                         activateLaser(touch.clientX, touch.clientY);
                     }
@@ -1978,7 +2226,7 @@
                     const currentX = touch.clientX;
                     const currentY = touch.clientY;
 
-                    // НОВОЕ: Обновляем позицию лазера
+                    // Обновляем позицию лазера
                     if (laserModeEnabled && isLaserActive) {
                         updateLaserPosition(currentX, currentY);
                         return; // В лазерном режиме блокируем другое управление
@@ -2041,7 +2289,7 @@
                 canvas.addEventListener('touchend', (e) => {
                     e.preventDefault();
 
-                    // НОВОЕ: Деактивируем лазер
+                    // Деактивируем лазер
                     if (laserModeEnabled && isLaserActive) {
                         deactivateLaser();
                         return;
@@ -2154,7 +2402,7 @@
 
                 ctx.font = '40px system-ui, sans-serif';
                 ctx.fillStyle = '#a9b7d4';
-                ctx.fillText('Выберите скорость"', 400, 750);
+                ctx.fillText('Выберите скорость', 400, 750);
 
                 ctx.font = '30px system-ui, sans-serif';
                 ctx.fillStyle = '#7b88aa';
@@ -2210,30 +2458,38 @@
                     }
                 }
 
-                // НОВОЕ: Рисуем прицел лазера если режим активен
+                // Рисуем прицел лазера если режим активен
                 if (laserModeEnabled && gameStarted && !gameOver && !aiMode) {
+                    const targetX = laserCursorX * BLOCK_SIZE + BLOCK_SIZE / 2;
+                    const targetY = laserCursorY * BLOCK_SIZE + BLOCK_SIZE / 2;
+
                     ctx.strokeStyle = '#ff0000';
                     ctx.lineWidth = 3;
                     ctx.shadowColor = '#ff0000';
                     ctx.shadowBlur = 10;
 
-                    // Рисуем перекрестие в центре экрана (имитация прицела)
+                    // Рисуем перекрестие
                     ctx.beginPath();
-                    ctx.moveTo(390, 800);  // Было 780, стало 800
-                    ctx.lineTo(410, 800);  // Было 780, стало 800
-                    ctx.moveTo(400, 790);  // Было 770, стало 790
-                    ctx.lineTo(400, 810);  // Было 790, стало 810
+                    ctx.moveTo(targetX - 15, targetY);
+                    ctx.lineTo(targetX + 15, targetY);
+                    ctx.moveTo(targetX, targetY - 15);
+                    ctx.lineTo(targetX, targetY + 15);
                     ctx.stroke();
 
-                    // Рисуем небольшие точки по краям для эффекта сканирования
+                    // Рисуем окружность
+                    ctx.beginPath();
+                    ctx.arc(targetX, targetY, 20, 0, Math.PI * 2);
+                    ctx.stroke();
+
+                    // Рисуем небольшие точки для эффекта
                     ctx.fillStyle = '#ff0000';
                     ctx.shadowBlur = 5;
                     for (let i = 0; i < 8; i++) {
                         const angle = (i / 8) * Math.PI * 2;
-                        const x = 400 + Math.cos(angle) * 30;
-                        const y = 800 + Math.sin(angle) * 30;
+                        const x = targetX + Math.cos(angle) * 25;
+                        const y = targetY + Math.sin(angle) * 25;
                         ctx.beginPath();
-                        ctx.arc(x, y, 2, 0, Math.PI * 2);
+                        ctx.arc(x, y, 3, 0, Math.PI * 2);
                         ctx.fill();
                     }
 
@@ -2287,7 +2543,7 @@
                 render();
                 updateButtonText();
                 updateSwipeToggleButton();
-                updateLaserToggleButton(); // НОВОЕ: обновляем кнопку лазера
+                updateLaserToggleButton();
 
                 setupTouchControls();
                 setupKeyboardControls();
@@ -2301,7 +2557,7 @@
                     });
                 }
 
-                // НОВОЕ: Добавляем обработчик для кнопки лазера
+                // Добавляем обработчик для кнопки лазера
                 if (laserToggleBtn) {
                     laserToggleBtn.addEventListener('click', (e) => {
                         e.preventDefault();
