@@ -310,14 +310,18 @@
             justify-content: center;
         }
 
-        .swipe-toggle.active {
-            background: #4CAF50;
+        .swipe-toggle.inactive {
+            background: rgba(76, 175, 80, 0.3);
+            /* Зеленый с прозрачностью 0.8 */
             box-shadow: 0 2px 0 #2d6e30;
+
         }
 
-        .swipe-toggle.inactive {
-            background: #f44336;
+        .swipe-toggle.active {
+            background: rgba(244, 67, 54, 0.3);
+            /* Красный с прозрачностью 0.8 */
             box-shadow: 0 2px 0 #aa2e25;
+
         }
 
         .swipe-toggle i {
@@ -325,6 +329,47 @@
         }
 
         .swipe-toggle:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
+        /* Кнопка лазерного пальца */
+        .laser-toggle {
+            background: #323d5e;
+            border: none;
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #1b2135;
+            transition: 0.08s linear;
+            touch-action: manipulation;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            min-width: 60px;
+            justify-content: center;
+        }
+
+        .laser-toggle.active {
+            background: rgba(255, 68, 68, 0.3);
+            /* ff4444 = rgb(255,68,68) с прозрачностью 0.7 */
+            box-shadow: 0 2px 0 #aa2222;
+            text-shadow: 0 0 5px rgba(255, 255, 255, 0.5);
+        }
+
+        .laser-toggle.inactive {
+            background: #555555;
+            box-shadow: 0 2px 0 #333333;
+        }
+
+        .laser-toggle i {
+            font-size: 0.8rem;
+        }
+
+        .laser-toggle:active {
             transform: translateY(2px);
             box-shadow: none;
         }
@@ -368,13 +413,52 @@
 
         .reset-btn:active,
         .ai-btn:active,
-        .swipe-toggle:active {
+        .swipe-toggle:active,
+        .laser-toggle:active {
             transform: translateY(4px);
             box-shadow: none;
         }
 
         .keyboard-hint {
             display: none;
+        }
+
+        /* Эффект лазера при уничтожении */
+        @keyframes laserPulse {
+            0% {
+                opacity: 0.3;
+                transform: scale(0.95);
+            }
+
+            50% {
+                opacity: 0.8;
+                transform: scale(1.05);
+            }
+
+            100% {
+                opacity: 0.3;
+                transform: scale(0.95);
+            }
+        }
+
+        .laser-active-indicator {
+            position: absolute;
+            top: 80px;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-left: -33px;
+            /* Сдвиг влево на 50px */
+            background: rgba(255, 68, 68, 0.3);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            animation: laserPulse 1s infinite;
+            z-index: 10;
+            pointer-events: none;
+            backdrop-filter: blur(4px);
+            border: 1px solid #ff8888;
         }
 
         /* ========== АДАПТИВ ДЛЯ РАЗНЫХ ЭКРАНОВ ========== */
@@ -413,7 +497,8 @@
                 font-size: 0.7rem;
             }
 
-            .swipe-toggle {
+            .swipe-toggle,
+            .laser-toggle {
                 font-size: 0.6rem;
                 padding: 3px 6px;
                 min-width: 50px;
@@ -723,8 +808,7 @@
 
             <div id="youtubeButtonContainer">
                 <a href="https://www.youtube.com/@Pavel_Volkov?sub_confirmation=1" target="_blank"
-                    rel="noopener noreferrer" class="youtube-button" id="youtubeChannelBtn"
-                    title="YouTube канал Павла Волкова">
+                    rel="noopener noreferrer" class="youtube-button" id="youtubeChannelBtn" title="Дела Техники">
                     <span class="youtube-icon">▶</span>
                 </a>
             </div>
@@ -740,12 +824,15 @@
             <canvas id="board" width="800" height="1600"></canvas>
         </div>
 
-        <!-- Подсказки для мобильного управления с кнопкой переключения свайпа -->
+        <!-- Подсказки для мобильного управления с кнопками переключения -->
         <div class="gesture-hint">
             <span><i>⬅️➡️</i> тащи</span>
             <span><i>⬆️</i> тяни</span>
             <button class="swipe-toggle inactive" id="swipeToggleBtn" title="Вкл/Выкл падение свайпом вниз">
                 <i>⬇️</i> <span id="swipeToggleText">выкл</span>
+            </button>
+            <button class="laser-toggle inactive" id="laserToggleBtn" title="Вкл/Выкл лазерный палец (уничтожай блоки)">
+                <i>🔫</i> <span id="laserToggleText">выкл</span>
             </button>
             <span><i>👆</i> тап</span>
         </div>
@@ -753,9 +840,12 @@
         <!-- Нижние кнопки управления -->
         <div class="footer">
             <button class="reset-btn" id="resetGame">▶ Новая игра</button>
-            <button class="ai-btn" id="aiPlay">🤖 Batrak</button>
+            <button class="ai-btn" id="aiPlay">🤖Батрак</button>
         </div>
     </div>
+
+    <!-- Индикатор активного лазера -->
+    <div id="laserIndicator" class="laser-active-indicator" style="display: none;">ЛАЗЕР</div>
 
     <script>
         (function () {
@@ -786,7 +876,7 @@
                             newChannelBtn.rel = 'noopener noreferrer';
                             newChannelBtn.className = 'youtube-button';
                             newChannelBtn.id = 'youtubeChannelBtn';
-                            newChannelBtn.title = 'YouTube канал Павла Волкова';
+                            newChannelBtn.title = 'Дела Техники';
                             newChannelBtn.innerHTML = `<span class="youtube-icon">▶</span>`;
                             container.appendChild(newChannelBtn);
                         }
@@ -826,7 +916,7 @@
             })();
 
             // ==========================================================================
-            // ТЕТРИС 20x40 · Оптимизированная версия с AI-ботом и переключателем свайпа
+            // ТЕТРИС 20x40 · Оптимизированная версия с AI-ботом, свайпом и ЛАЗЕРНЫМ ПАЛЬЦЕМ
             // ==========================================================================
 
             // Размер игрового поля
@@ -871,6 +961,20 @@
             let swipeDownEnabled = false;
             const swipeToggleBtn = document.getElementById('swipeToggleBtn');
             const swipeToggleText = document.getElementById('swipeToggleText');
+
+            // НОВОЕ: Переключатель лазерного пальца
+            let laserModeEnabled = false;
+            const laserToggleBtn = document.getElementById('laserToggleBtn');
+            const laserToggleText = document.getElementById('laserToggleText');
+            const laserIndicator = document.getElementById('laserIndicator');
+
+            // НОВОЕ: Переменные для лазерного режима
+            let isLaserActive = false;
+            let laserInterval = null;
+            let lastLaserX = -1;
+            let lastLaserY = -1;
+            const LASER_FIRE_RATE = 50; // миллисекунд между выстрелами (20 выстрелов в секунду)
+            const LASER_RADIUS = 2; // радиус поражения (сколько клеток вниз уничтожается за раз)
 
             // Drag-управление
             let isDragging = false;
@@ -919,11 +1023,181 @@
                 }
             }
 
+            // НОВОЕ: Функции для лазерного режима
+            function toggleLaserMode() {
+                if (aiMode) {
+                    alert('Выключите Батрака перед использованием лазера!');
+                    return;
+                }
+                laserModeEnabled = !laserModeEnabled;
+                updateLaserToggleButton();
+
+                // Показываем/скрываем индикатор
+                if (laserIndicator) {
+                    laserIndicator.style.display = laserModeEnabled ? 'block' : 'none';
+                }
+
+                // Если выключаем лазер, деактивируем его
+                if (!laserModeEnabled) {
+                    deactivateLaser();
+                }
+            }
+
+            function updateLaserToggleButton() {
+                if (laserToggleBtn) {
+                    laserToggleBtn.classList.remove('active', 'inactive');
+                    laserToggleBtn.classList.add(laserModeEnabled ? 'active' : 'inactive');
+                    laserToggleText.textContent = laserModeEnabled ? 'вкл' : 'выкл';
+                }
+            }
+
+            // НОВОЕ: Активация лазера
+            function activateLaser(x, y) {
+                if (!laserModeEnabled || aiMode || !gameStarted || gameOver) return;
+
+                // Получаем координаты клетки на доске
+                const rect = boardCanvas.getBoundingClientRect();
+                const scaleX = boardCanvas.width / rect.width;
+                const scaleY = boardCanvas.height / rect.height;
+
+                const canvasX = (x - rect.left) * scaleX;
+                const canvasY = (y - rect.top) * scaleY;
+
+                const col = Math.floor(canvasX / BLOCK_SIZE);
+                const row = Math.floor(canvasY / BLOCK_SIZE);
+
+                // Проверяем, что координаты в пределах доски
+                if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
+                    // Запоминаем позицию для интервала
+                    lastLaserX = col;
+                    lastLaserY = row;
+
+                    if (!isLaserActive) {
+                        isLaserActive = true;
+
+                        // Немедленно делаем первый выстрел
+                        fireLaser(col, row);
+
+                        // Запускаем интервал для автоматической стрельбы
+                        if (laserInterval) clearInterval(laserInterval);
+                        laserInterval = setInterval(() => {
+                            if (isLaserActive && lastLaserX !== -1 && lastLaserY !== -1) {
+                                fireLaser(lastLaserX, lastLaserY);
+                            }
+                        }, LASER_FIRE_RATE);
+                    }
+                }
+            }
+
+            // НОВОЕ: Деактивация лазера
+            function deactivateLaser() {
+                isLaserActive = false;
+                lastLaserX = -1;
+                lastLaserY = -1;
+                if (laserInterval) {
+                    clearInterval(laserInterval);
+                    laserInterval = null;
+                }
+            }
+
+            // НОВОЕ: Обновление позиции лазера при движении пальца
+            function updateLaserPosition(x, y) {
+                if (!laserModeEnabled || !isLaserActive || aiMode || !gameStarted || gameOver) return;
+
+                const rect = boardCanvas.getBoundingClientRect();
+                const scaleX = boardCanvas.width / rect.width;
+                const scaleY = boardCanvas.height / rect.height;
+
+                const canvasX = (x - rect.left) * scaleX;
+                const canvasY = (y - rect.top) * scaleY;
+
+                const col = Math.floor(canvasX / BLOCK_SIZE);
+                const row = Math.floor(canvasY / BLOCK_SIZE);
+
+                if (col >= 0 && col < COLS && row >= 0 && row < ROWS) {
+                    lastLaserX = col;
+                    lastLaserY = row;
+                }
+            }
+
+            // НОВОЕ: Функция выстрела лазером
+            function fireLaser(col, row) {
+                if (!laserModeEnabled || aiMode || !gameStarted || gameOver) return;
+
+                let blocksDestroyed = 0;
+
+                // Уничтожаем блоки в радиусе поражения вниз от точки касания
+                for (let r = row; r < Math.min(row + LASER_RADIUS + 1, ROWS); r++) {
+                    if (board[r][col] !== 0) {
+                        board[r][col] = 0;
+                        blocksDestroyed++;
+                    }
+                }
+
+                // Если уничтожили блоки, добавляем очки (немного, чтобы не было читерства)
+                if (blocksDestroyed > 0) {
+                    score += blocksDestroyed * 5;
+                    updateScore();
+
+                    // Проверяем, не образовались ли пустые строки, которые нужно убрать
+                    checkAndShiftBlocks(col);
+                }
+
+                render();
+            }
+
+            // НОВОЕ: Проверка и смещение блоков после уничтожения
+            function checkAndShiftBlocks(col) {
+                let changed = false;
+
+                // Проходим снизу вверх
+                for (let row = ROWS - 1; row > 0; row--) {
+                    if (board[row][col] === 0) {
+                        // Ищем первый блок выше
+                        for (let r = row - 1; r >= 0; r--) {
+                            if (board[r][col] !== 0) {
+                                // Смещаем блок вниз
+                                board[row][col] = board[r][col];
+                                board[r][col] = 0;
+                                changed = true;
+                                break;
+                            }
+                        }
+                    }
+                }
+
+                // Если были изменения, проверяем полные строки
+                if (changed) {
+                    checkFullRows();
+                }
+            }
+
+            // НОВОЕ: Проверка полных строк после лазера
+            function checkFullRows() {
+                let rowsCleared = 0;
+                for (let row = ROWS - 1; row >= 0;) {
+                    if (board[row].every(cell => cell !== 0)) {
+                        for (let r = row; r > 0; r--) {
+                            board[r] = [...board[r - 1]];
+                        }
+                        board[0] = Array(COLS).fill(0);
+                        rowsCleared++;
+                    } else {
+                        row--;
+                    }
+                }
+
+                if (rowsCleared > 0) {
+                    const points = [0, 100, 300, 700, 1500];
+                    score += (points[rowsCleared] || 1500);
+                    updateScore();
+                }
+            }
+
             // Функция для получения реальной высоты окна
             function getRealViewportHeight() {
                 if (isYandexBrowser) {
-                    // Для Яндекс.Браузера используем window.innerHeight с запасом
-                    return window.innerHeight - 10; // Небольшой запас
+                    return window.innerHeight - 10;
                 }
                 return window.innerHeight;
             }
@@ -934,25 +1208,17 @@
                 const gameWrapper = document.querySelector('.game-wrapper');
                 if (!container || !gameWrapper) return;
 
-                // Получаем реальную высоту окна
                 const viewportHeight = getRealViewportHeight();
-
-                // Принудительно устанавливаем высоту game-wrapper
                 gameWrapper.style.height = viewportHeight + 'px';
 
                 const containerWidth = container.clientWidth;
                 const containerHeight = container.clientHeight;
 
-                // Рассчитываем размер так, чтобы canvas вписывался в контейнер
-                const maxWidth = containerWidth;
-                const maxHeight = containerHeight;
-
-                // Соотношение сторон 1:2 (20x40)
-                let canvasWidth = maxWidth;
+                let canvasWidth = containerWidth;
                 let canvasHeight = canvasWidth * 2;
 
-                if (canvasHeight > maxHeight) {
-                    canvasHeight = maxHeight;
+                if (canvasHeight > containerHeight) {
+                    canvasHeight = containerHeight;
                     canvasWidth = canvasHeight / 2;
                 }
 
@@ -960,11 +1226,10 @@
                 boardCanvas.style.height = `${canvasHeight}px`;
             }
 
-            // Специальная функция для Яндекс.Браузера с частой проверкой
+            // Специальная функция для Яндекс.Браузера
             function yandexBrowserFix() {
                 if (!isYandexBrowser) return;
 
-                // Проверяем каждые 100мс
                 setInterval(() => {
                     const viewportHeight = getRealViewportHeight();
                     const gameWrapper = document.querySelector('.game-wrapper');
@@ -1208,6 +1473,7 @@
                     fallInterval = null;
                     stopAIMode();
                     updateButtonText();
+                    deactivateLaser(); // Выключаем лазер при Game Over
                 }
                 render();
             }
@@ -1255,7 +1521,7 @@
             function updateButtonText() {
                 if (!gameStarted && !gameOver) {
                     resetBtn.innerHTML = '▶ Новая игра';
-                    aiBtn.innerHTML = '🤖 Batrak';
+                    aiBtn.innerHTML = '🤖 Батрак';
                 } else if (gameStarted && !gameOver) {
                     if (aiMode) {
                         resetBtn.innerHTML = '⏹ Остановить';
@@ -1274,6 +1540,7 @@
                 if (gameStarted && !gameOver) return;
 
                 stopAIMode();
+                deactivateLaser(); // Выключаем лазер при старте
 
                 board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
                 score = 0;
@@ -1295,6 +1562,7 @@
 
             function resetGame() {
                 stopAIMode();
+                deactivateLaser(); // Выключаем лазер при сбросе
 
                 if (fallInterval) clearInterval(fallInterval);
                 resetLockTimer();
@@ -1467,6 +1735,7 @@
                 if (fallInterval) clearInterval(fallInterval);
                 resetLockTimer();
                 clearAllIntervals();
+                deactivateLaser(); // Выключаем лазер при включении AI
 
                 board = Array(ROWS).fill().map(() => Array(COLS).fill(0));
                 score = 0;
@@ -1653,7 +1922,6 @@
                         }
                     }
                 });
-
                 window.addEventListener('blur', () => {
                     keyState = {};
                     spacePressed = false;
@@ -1694,17 +1962,29 @@
                     accumulatedRotation = 0;
                     dragMode = null;
 
+                    // НОВОЕ: Активируем лазер если режим включен
+                    if (laserModeEnabled) {
+                        activateLaser(touch.clientX, touch.clientY);
+                    }
+
                     keyState = {};
                     clearAllIntervals();
                 }, { passive: false });
 
                 canvas.addEventListener('touchmove', (e) => {
                     e.preventDefault();
-                    if (!currentPiece || gameOver || !gameStarted || aiMode) return;
 
                     const touch = e.touches[0];
                     const currentX = touch.clientX;
                     const currentY = touch.clientY;
+
+                    // НОВОЕ: Обновляем позицию лазера
+                    if (laserModeEnabled && isLaserActive) {
+                        updateLaserPosition(currentX, currentY);
+                        return; // В лазерном режиме блокируем другое управление
+                    }
+
+                    if (!currentPiece || gameOver || !gameStarted || aiMode) return;
 
                     if (!isDragging) {
                         const diffX = Math.abs(currentX - dragStartX);
@@ -1739,13 +2019,9 @@
                         } else if (dragMode === 'vertical') {
                             const deltaY = currentY - lastMoveY;
 
-                            // УВЕЛИЧИВАЕМ ЧУВСТВИТЕЛЬНОСТЬ ПОВОРОТА
-                            // Уменьшил порог с -5 до -3 для более быстрого реагирования
                             if (deltaY < -3) {
                                 accumulatedRotation += Math.abs(deltaY);
 
-                                // УМЕНЬШИЛ ЧУВСТВИТЕЛЬНОСТЬ (меньше значение = чувствительнее)
-                                // Было getRotationSensitivity() (около 75-150), теперь фиксированное 40
                                 const rotationThreshold = 40;
 
                                 if (accumulatedRotation > rotationThreshold) {
@@ -1754,7 +2030,6 @@
                                     lastMoveY = currentY;
                                 }
                             } else {
-                                // Сбрасываем накопление при движении вниз
                                 accumulatedRotation = 0;
                                 lastMoveY = currentY;
                             }
@@ -1765,6 +2040,12 @@
 
                 canvas.addEventListener('touchend', (e) => {
                     e.preventDefault();
+
+                    // НОВОЕ: Деактивируем лазер
+                    if (laserModeEnabled && isLaserActive) {
+                        deactivateLaser();
+                        return;
+                    }
 
                     if (!gameStarted || gameOver || aiMode) return;
 
@@ -1778,7 +2059,6 @@
                     const speed = Math.sqrt(diffX * diffX + diffY * diffY) / timeDiff;
 
                     if (isDragging) {
-                        // Быстрый свайп вниз ТОЛЬКО если включен свайп
                         if (swipeDownEnabled && diffY > 70 && speed > 0.5) {
                             hardDrop();
                         }
@@ -1788,7 +2068,6 @@
                         return;
                     }
 
-                    // Длительное нажатие без движения
                     if (timeDiff >= LONG_TAP_DELAY && Math.abs(diffX) < 15 && Math.abs(diffY) < 15) {
                         if (swipeDownEnabled) {
                             hardDrop();
@@ -1797,24 +2076,18 @@
                         return;
                     }
 
-                    // Быстрые жесты
                     if (speed > 0.25) {
-                        // Горизонтальный свайп
                         if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 25) {
                             if (diffX > 0) movePiece(1, 0);
                             else movePiece(-1, 0);
                         }
-                        // Вертикальный свайп вверх (поворот) - УВЕЛИЧИЛ ЧУВСТВИТЕЛЬНОСТЬ
-                        // Уменьшил порог с -35 до -20
                         else if (diffY < -20) {
                             rotatePieceMobile();
                         }
-                        // Вертикальный свайп вниз (hard drop) - только если включен
                         else if (swipeDownEnabled && diffY > 45) {
                             hardDrop();
                         }
                     }
-                    // Короткий тап без скорости
                     else if (Math.abs(diffX) < 25 && Math.abs(diffY) < 25) {
                         const rect = canvas.getBoundingClientRect();
                         const touchX = touchEnd.clientX - rect.left;
@@ -1832,6 +2105,16 @@
                     isDragging = false;
                     dragMode = null;
                 }, { passive: false });
+
+                canvas.addEventListener('touchcancel', (e) => {
+                    e.preventDefault();
+                    if (laserModeEnabled && isLaserActive) {
+                        deactivateLaser();
+                    }
+                    touchStartX = 0;
+                    isDragging = false;
+                    dragMode = null;
+                });
 
                 canvas.addEventListener('contextmenu', (e) => e.preventDefault());
             }
@@ -1869,13 +2152,13 @@
                 ctx.textAlign = 'center';
                 ctx.fillText('ТЕТРИС', 400, 600);
 
-                ctx.font = '20px system-ui, sans-serif';
+                ctx.font = '40px system-ui, sans-serif';
                 ctx.fillStyle = '#a9b7d4';
-                ctx.fillText('Нажмите "Новая игра" или "Play"', 400, 750);
+                ctx.fillText('Выберите скорость"', 400, 750);
 
-                ctx.font = '16px system-ui, sans-serif';
+                ctx.font = '30px system-ui, sans-serif';
                 ctx.fillStyle = '#7b88aa';
-                ctx.fillText('Выберите скорость и начинайте', 400, 830);
+                ctx.fillText('Нажмите "Новая игра"', 400, 830);
 
                 nextCtx.clearRect(0, 0, 140, 140);
                 nextCtx.fillStyle = '#323d5e';
@@ -1927,6 +2210,37 @@
                     }
                 }
 
+                // НОВОЕ: Рисуем прицел лазера если режим активен
+                if (laserModeEnabled && gameStarted && !gameOver && !aiMode) {
+                    ctx.strokeStyle = '#ff0000';
+                    ctx.lineWidth = 3;
+                    ctx.shadowColor = '#ff0000';
+                    ctx.shadowBlur = 10;
+
+                    // Рисуем перекрестие в центре экрана (имитация прицела)
+                    ctx.beginPath();
+                    ctx.moveTo(390, 800);  // Было 780, стало 800
+                    ctx.lineTo(410, 800);  // Было 780, стало 800
+                    ctx.moveTo(400, 790);  // Было 770, стало 790
+                    ctx.lineTo(400, 810);  // Было 790, стало 810
+                    ctx.stroke();
+
+                    // Рисуем небольшие точки по краям для эффекта сканирования
+                    ctx.fillStyle = '#ff0000';
+                    ctx.shadowBlur = 5;
+                    for (let i = 0; i < 8; i++) {
+                        const angle = (i / 8) * Math.PI * 2;
+                        const x = 400 + Math.cos(angle) * 30;
+                        const y = 800 + Math.sin(angle) * 30;
+                        ctx.beginPath();
+                        ctx.arc(x, y, 2, 0, Math.PI * 2);
+                        ctx.fill();
+                    }
+
+                    ctx.shadowBlur = 0;
+                    ctx.shadowColor = 'transparent';
+                }
+
                 if (gameOver) {
                     ctx.globalAlpha = 0.7;
                     ctx.fillStyle = '#330000';
@@ -1973,6 +2287,7 @@
                 render();
                 updateButtonText();
                 updateSwipeToggleButton();
+                updateLaserToggleButton(); // НОВОЕ: обновляем кнопку лазера
 
                 setupTouchControls();
                 setupKeyboardControls();
@@ -1983,6 +2298,14 @@
                     swipeToggleBtn.addEventListener('click', (e) => {
                         e.preventDefault();
                         toggleSwipeDown();
+                    });
+                }
+
+                // НОВОЕ: Добавляем обработчик для кнопки лазера
+                if (laserToggleBtn) {
+                    laserToggleBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        toggleLaserMode();
                     });
                 }
 
@@ -2002,12 +2325,12 @@
                         resizeCanvas();
                     }, { passive: true });
 
-                    // Запускаем специальный фикс для Яндекс.Браузера
                     yandexBrowserFix();
                 }
 
                 resetBtn.addEventListener('click', () => {
                     if (aiMode) stopAIMode();
+                    if (laserModeEnabled) deactivateLaser();
 
                     if (!gameStarted && !gameOver) {
                         startGame();
@@ -2023,6 +2346,12 @@
                         stopAIMode();
                         resetGame();
                     } else {
+                        // Выключаем лазер при включении AI
+                        if (laserModeEnabled) {
+                            laserModeEnabled = false;
+                            updateLaserToggleButton();
+                            deactivateLaser();
+                        }
                         startAIMode();
                     }
                     updateButtonText();
