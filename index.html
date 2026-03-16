@@ -160,7 +160,7 @@
         }
 
         :root {
-            --yt-size: 38px;
+            --yt-size: 32px;
             --yt-logo-size: 22px;
             --yt-icon-size: 14px;
             --yt-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
@@ -212,7 +212,7 @@
             background-size: contain;
             background-repeat: no-repeat;
             background-position: center;
-            opacity: 0.9;
+            opacity: 0;
             z-index: 1;
         }
 
@@ -290,6 +290,45 @@
             filter: drop-shadow(0 2px 2px black);
         }
 
+        /* Кнопка переключения свайпа вниз */
+        .swipe-toggle {
+            background: #323d5e;
+            border: none;
+            color: white;
+            font-size: 0.7rem;
+            padding: 4px 8px;
+            border-radius: 20px;
+            cursor: pointer;
+            box-shadow: 0 2px 0 #1b2135;
+            transition: 0.08s linear;
+            touch-action: manipulation;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            font-weight: 600;
+            min-width: 60px;
+            justify-content: center;
+        }
+
+        .swipe-toggle.active {
+            background: #4CAF50;
+            box-shadow: 0 2px 0 #2d6e30;
+        }
+
+        .swipe-toggle.inactive {
+            background: #f44336;
+            box-shadow: 0 2px 0 #aa2e25;
+        }
+
+        .swipe-toggle i {
+            font-size: 0.8rem;
+        }
+
+        .swipe-toggle:active {
+            transform: translateY(2px);
+            box-shadow: none;
+        }
+
         /* Нижняя панель кнопок */
         .footer {
             margin-top: 2px;
@@ -328,7 +367,8 @@
         }
 
         .reset-btn:active,
-        .ai-btn:active {
+        .ai-btn:active,
+        .swipe-toggle:active {
             transform: translateY(4px);
             box-shadow: none;
         }
@@ -371,6 +411,12 @@
 
             .gesture-hint i {
                 font-size: 0.7rem;
+            }
+
+            .swipe-toggle {
+                font-size: 0.6rem;
+                padding: 3px 6px;
+                min-width: 50px;
             }
 
             .reset-btn,
@@ -694,11 +740,13 @@
             <canvas id="board" width="800" height="1600"></canvas>
         </div>
 
-        <!-- Подсказки для мобильного управления -->
+        <!-- Подсказки для мобильного управления с кнопкой переключения свайпа -->
         <div class="gesture-hint">
             <span><i>⬅️➡️</i> тащи</span>
             <span><i>⬆️</i> тяни</span>
-            <span><i>⬇️⬇️</i> резко</span>
+            <button class="swipe-toggle inactive" id="swipeToggleBtn" title="Вкл/Выкл падение свайпом вниз">
+                <i>⬇️</i> <span id="swipeToggleText">выкл</span>
+            </button>
             <span><i>👆</i> тап</span>
         </div>
 
@@ -778,7 +826,7 @@
             })();
 
             // ==========================================================================
-            // ТЕТРИС 20x40 · Оптимизированная версия с AI-ботом
+            // ТЕТРИС 20x40 · Оптимизированная версия с AI-ботом и переключателем свайпа
             // ==========================================================================
 
             // Размер игрового поля
@@ -819,6 +867,11 @@
             const BASE_INTERVAL = 500;
             const COMFORT_SPEED = 2.0;
 
+            // Переключатель свайпа вниз (hard drop)
+            let swipeDownEnabled = false;
+            const swipeToggleBtn = document.getElementById('swipeToggleBtn');
+            const swipeToggleText = document.getElementById('swipeToggleText');
+
             // Drag-управление
             let isDragging = false;
             let dragStartX = 0, dragStartY = 0;
@@ -851,6 +904,20 @@
 
             // Детектим Яндекс.Браузер
             const isYandexBrowser = navigator.userAgent.toLowerCase().includes('yandex');
+
+            // Функция для переключения свайпа вниз
+            function toggleSwipeDown() {
+                swipeDownEnabled = !swipeDownEnabled;
+                updateSwipeToggleButton();
+            }
+
+            function updateSwipeToggleButton() {
+                if (swipeToggleBtn) {
+                    swipeToggleBtn.classList.remove('active', 'inactive');
+                    swipeToggleBtn.classList.add(swipeDownEnabled ? 'active' : 'inactive');
+                    swipeToggleText.textContent = swipeDownEnabled ? 'вкл' : 'выкл';
+                }
+            }
 
             // Функция для получения реальной высоты окна
             function getRealViewportHeight() {
@@ -1643,13 +1710,15 @@
                         const diffX = Math.abs(currentX - dragStartX);
                         const diffY = Math.abs(currentY - dragStartY);
 
-                        if (diffX > DRAG_THRESHOLD || diffY > DRAG_THRESHOLD) {
+                        if (diffX > 20 || diffY > 20) {
                             isDragging = true;
                             if (diffX > diffY) {
                                 dragMode = 'horizontal';
                             } else {
                                 dragMode = 'vertical';
                             }
+                            lastMoveX = currentX;
+                            lastMoveY = currentY;
                         }
                     }
 
@@ -1659,7 +1728,7 @@
 
                         if (dragMode === 'horizontal') {
                             const deltaX = currentX - lastMoveX;
-                            const blockDelta = Math.round(deltaX / pixelPerBlock);
+                            const blockDelta = Math.round(deltaX / (pixelPerBlock * 0.7));
 
                             if (blockDelta !== 0) {
                                 movePiece(blockDelta, 0);
@@ -1670,16 +1739,22 @@
                         } else if (dragMode === 'vertical') {
                             const deltaY = currentY - lastMoveY;
 
-                            if (deltaY < 0) {
+                            // УВЕЛИЧИВАЕМ ЧУВСТВИТЕЛЬНОСТЬ ПОВОРОТА
+                            // Уменьшил порог с -5 до -3 для более быстрого реагирования
+                            if (deltaY < -3) {
                                 accumulatedRotation += Math.abs(deltaY);
 
-                                const currentSensitivity = getRotationSensitivity();
-                                if (accumulatedRotation > currentSensitivity) {
+                                // УМЕНЬШИЛ ЧУВСТВИТЕЛЬНОСТЬ (меньше значение = чувствительнее)
+                                // Было getRotationSensitivity() (около 75-150), теперь фиксированное 40
+                                const rotationThreshold = 40;
+
+                                if (accumulatedRotation > rotationThreshold) {
                                     rotatePieceMobile();
                                     accumulatedRotation = 0;
                                     lastMoveY = currentY;
                                 }
                             } else {
+                                // Сбрасываем накопление при движении вниз
                                 accumulatedRotation = 0;
                                 lastMoveY = currentY;
                             }
@@ -1700,8 +1775,11 @@
                     const diffY = touchEnd.clientY - touchStartY;
                     const timeDiff = Date.now() - touchStartTime;
 
+                    const speed = Math.sqrt(diffX * diffX + diffY * diffY) / timeDiff;
+
                     if (isDragging) {
-                        if (diffY > 50 && timeDiff < 300) {
+                        // Быстрый свайп вниз ТОЛЬКО если включен свайп
+                        if (swipeDownEnabled && diffY > 70 && speed > 0.5) {
                             hardDrop();
                         }
                         isDragging = false;
@@ -1710,26 +1788,34 @@
                         return;
                     }
 
-                    if (timeDiff >= LONG_TAP_DELAY && Math.abs(diffX) < 20 && Math.abs(diffY) < 20) {
-                        hardDrop();
+                    // Длительное нажатие без движения
+                    if (timeDiff >= LONG_TAP_DELAY && Math.abs(diffX) < 15 && Math.abs(diffY) < 15) {
+                        if (swipeDownEnabled) {
+                            hardDrop();
+                        }
                         touchStartX = 0;
                         return;
                     }
 
-                    if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 20) {
-                        if (diffX > 0) movePiece(1, 0);
-                        else movePiece(-1, 0);
-                    }
-                    else if (diffY < 0) {
-                        const speed = Math.abs(diffY) / timeDiff;
-                        if ((speed > 0.3 && Math.abs(diffY) > 10) || Math.abs(diffY) > 25) {
+                    // Быстрые жесты
+                    if (speed > 0.25) {
+                        // Горизонтальный свайп
+                        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 25) {
+                            if (diffX > 0) movePiece(1, 0);
+                            else movePiece(-1, 0);
+                        }
+                        // Вертикальный свайп вверх (поворот) - УВЕЛИЧИЛ ЧУВСТВИТЕЛЬНОСТЬ
+                        // Уменьшил порог с -35 до -20
+                        else if (diffY < -20) {
                             rotatePieceMobile();
                         }
+                        // Вертикальный свайп вниз (hard drop) - только если включен
+                        else if (swipeDownEnabled && diffY > 45) {
+                            hardDrop();
+                        }
                     }
-                    else if (Math.abs(diffY) > 20 && diffY > 0) {
-                        hardDrop();
-                    }
-                    else if (Math.abs(diffX) < 15 && Math.abs(diffY) < 15) {
+                    // Короткий тап без скорости
+                    else if (Math.abs(diffX) < 25 && Math.abs(diffY) < 25) {
                         const rect = canvas.getBoundingClientRect();
                         const touchX = touchEnd.clientX - rect.left;
 
@@ -1886,10 +1972,19 @@
                 gameOver = false;
                 render();
                 updateButtonText();
+                updateSwipeToggleButton();
 
                 setupTouchControls();
                 setupKeyboardControls();
                 setupSpeedControls();
+
+                // Добавляем обработчик для кнопки переключения свайпа
+                if (swipeToggleBtn) {
+                    swipeToggleBtn.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        toggleSwipeDown();
+                    });
+                }
 
                 // Добавляем обработчик изменения размера окна
                 window.addEventListener('resize', () => {
