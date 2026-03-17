@@ -379,7 +379,7 @@
             margin-top: 2px;
             margin-bottom: 0;
             display: flex;
-            gap: 8px;
+            gap: 80px;
             flex-shrink: 0;
             width: 100%;
             justify-content: center;
@@ -404,6 +404,8 @@
             cursor: pointer;
             min-width: 110px;
             flex: 0 1 auto;
+            margin: 0 10px;
+            /* добавить горизонтальные отступы */
         }
 
         .ai-btn {
@@ -843,18 +845,18 @@
                 <i>⬇️</i> <span id="swipeToggleText">выкл</span>
             </button>
             <button class="laser-toggle inactive" id="laserToggleBtn" title="Вкл/Выкл лазерный палец (уничтожай блоки)">
-                <i>🔫</i> <span id="laserToggleText">выкл</span>
+                <i>▄︻テ══━一💥</i><span id="laserToggleText"></span>
             </button>
             <!-- Обновленные подсказки для ПК -->
-            <span class="pc-hint"><i>⌨️</i> [Alt] + стрелки</span>
-            <span class="pc-hint"><i>🖱️</i> ЛКМ / [пробел]</span>
+            <span class="pc-hint"><i>⌨️</i> V [стрелки]</span>
+            <span class="pc-hint"><i>🖱️</i> ЛКМ [пробел]</span>
             <span><i>👆</i> тап</span>
         </div>
 
         <!-- Нижние кнопки управления -->
         <div class="footer">
             <button class="reset-btn" id="resetGame">▶ Новая игра</button>
-            <button class="ai-btn" id="aiPlay">🤖Батрак</button>
+            <button class="ai-btn" id="aiPlay">🤖</button>
         </div>
     </div>
 
@@ -990,7 +992,7 @@
             const LASER_FIRE_RATE = 50; // миллисекунд между выстрелами (20 выстрелов в секунду)
             const LASER_RADIUS = 2; // радиус поражения (сколько клеток вниз уничтожается за раз)
 
-            // НОВОЕ: Переменные для лазера на Alt + мышь
+            // НОВОЕ: Переменные для лазера на v + мышь
             let laserCursorX = Math.floor(COLS / 2);
             let laserCursorY = Math.floor(ROWS / 2);
             let lastLaserFireTime = 0;
@@ -1048,15 +1050,15 @@
             // НОВОЕ: Функции для лазерного режима
             function toggleLaserMode() {
                 if (aiMode) {
-                    alert('Выключите Батрака перед использованием лазера!');
+                    alert('Выключите 🤖 перед использованием лазера!');
                     return;
                 }
                 laserModeEnabled = !laserModeEnabled;
                 updateLaserToggleButton();
 
-                // Сбрасываем флаги Alt-режима
+                // Сбрасываем флаги v-режима
                 if (!laserModeEnabled) {
-                    laserActiveByAlt = false;
+                    laserActiveByV = false;
                     altPressed = false;
                     mouseLaserActive = false;
                 }
@@ -1076,7 +1078,6 @@
                 if (laserToggleBtn) {
                     laserToggleBtn.classList.remove('active', 'inactive');
                     laserToggleBtn.classList.add(laserModeEnabled ? 'active' : 'inactive');
-                    laserToggleText.textContent = laserModeEnabled ? 'вкл' : 'выкл';
                 }
             }
 
@@ -1555,11 +1556,11 @@
             function updateButtonText() {
                 if (!gameStarted && !gameOver) {
                     resetBtn.innerHTML = '▶ Новая игра';
-                    aiBtn.innerHTML = '🤖 Батрак';
+                    aiBtn.innerHTML = '🤖';
                 } else if (gameStarted && !gameOver) {
                     if (aiMode) {
                         resetBtn.innerHTML = '⏹ Остановить';
-                        aiBtn.innerHTML = '🤖 Шарашит...';
+                        aiBtn.innerHTML = '🤖 играет...';
                     } else {
                         resetBtn.innerHTML = '⏹ Сброс';
                         aiBtn.innerHTML = '🤖 Play';
@@ -1886,14 +1887,14 @@
 
                 window.addEventListener('keydown', (e) => {
                     const key = e.key;
-                    const isAlt = key === 'Alt' || e.altKey;
+                    const isV = key === 'v' || e.altKey;
 
                     // Клавиша V нажата - включаем лазерный режим (удерживание)
                     if (key === 'v' || key === 'V') {
                         e.preventDefault();
 
                         if (aiMode) {
-                            alert('Выключите Батрака перед использованием лазера!');
+                            alert('Выключите 🤖 перед использованием лазера!');
                             return;
                         }
 
@@ -1922,7 +1923,7 @@
                     if (key === 'l' || key === 'L') {
                         e.preventDefault();
                         if (aiMode) {
-                            alert('Выключите Батрака перед использованием лазера!');
+                            alert('Выключите Робота перед использованием лазера!');
                             return;
                         }
                         toggleLaserMode();
@@ -2076,10 +2077,10 @@
                     spacePressed = false;
                     clearAllIntervals();
 
-                    // Сбрасываем Alt-лазер при потере фокуса
-                    if (laserActiveByAlt) {
+                    // Сбрасываем v-лазер при потере фокуса
+                    if (laserActiveByV) {
                         laserModeEnabled = false;
-                        laserActiveByAlt = false;
+                        laserActiveByV = false;
                         altPressed = false;
                         updateLaserToggleButton();
                         if (laserIndicator) {
